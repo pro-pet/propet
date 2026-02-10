@@ -1,4 +1,4 @@
-import { Button } from "@propet/ui/components/button"
+import { Button } from "@propet/ui"
 
 export default function Page() {
   return (
