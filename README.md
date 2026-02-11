@@ -54,7 +54,7 @@ ProPet is an innovative pet social platform. Unlike traditional social media, we
 |------------|---------|-------------|
 | **NestJS** | 11.0 | Enterprise Node.js framework |
 | **Express** | - | HTTP server platform |
-| **TypeScript** | 5.7 | Type safety |
+| **TypeScript** | 5.9 | Type safety |
 | **Jest** | 30.0 | Testing framework |
 | **RxJS** | 7.8 | Reactive programming library |
 
@@ -66,29 +66,6 @@ ProPet is an innovative pet social platform. Unlike traditional social media, we
 | **Turbo** | Monorepo build system |
 | **ESLint** | Code linting |
 | **Prettier** | Code formatting |
-
----
-
-## Project Structure
-
-```
-propet/
-├── apps/
-│   ├── web/                 # Next.js frontend app
-│   │   ├── app/             # App Router pages
-│   │   ├── components/      # Page components
-│   │   └── public/          # Static assets
-│   └── service/             # NestJS backend service
-│       ├── src/             # Source code
-│       └── test/            # Test files
-├── packages/
-│   ├── ui/                  # Shared UI component library
-│   ├── eslint-config/       # ESLint configuration
-│   └── typescript-config/   # TypeScript configuration
-├── turbo.json               # Turbo configuration
-├── pnpm-workspace.yaml      # Workspace configuration
-└── package.json
-```
 
 ---
 
@@ -134,12 +111,6 @@ pnpm build
 | `pnpm build` | Build all packages |
 | `pnpm lint` | Run linting |
 | `pnpm format` | Format code |
-
----
-
-## Contributing
-
-Issues and Pull Requests are welcome!
 
 ---
 
