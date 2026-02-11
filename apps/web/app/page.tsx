@@ -1,15 +1,14 @@
-import { Button } from "@propet/ui"
+async function getWelcome() {
+  const res = await fetch(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001');
+  return res.text();
+}
 
-export default function Page() {
+export default async function Page() {
+  const message = await getWelcome();
+
   return (
     <div className="flex items-center justify-center min-h-svh">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl font-bold">Hello World</h1>
-        <div className="flex gap-2">
-          <Button>Button</Button>
-          <Button variant="outline">Outline</Button>
-        </div>
-      </div>
+      <h1 className="text-2xl font-bold">{message}</h1>
     </div>
   )
 }
