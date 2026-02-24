@@ -1,7 +1,6 @@
-import { config } from "@propet/eslint-config/nestjs"
+import { config } from '@propet/eslint-config/nestjs'
 
-export default [
-  ...config,
+export default config.append(
   {
     languageOptions: {
       parserOptions: {
@@ -10,9 +9,4 @@ export default [
       },
     },
   },
-  {
-    rules: {
-      "prettier/prettier": ["error", { endOfLine: "auto" }],
-    },
-  },
-]
+)

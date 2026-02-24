@@ -1,13 +1,12 @@
 {
   "name": "@propet/service",
   "version": "0.0.1",
+  "private": true,
   "description": "",
   "author": "",
-  "private": true,
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -55,6 +54,7 @@
     "@types/pg": "^8.16.0",
     "@types/supertest": "^6.0.2",
     "dotenv": "^17.2.4",
+    "eslint": "^9.39.2",
     "jest": "^30.0.0",
     "prisma": "^7.4.0",
     "source-map-support": "^0.5.21",
