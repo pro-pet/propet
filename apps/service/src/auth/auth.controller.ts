@@ -1,19 +1,23 @@
-import type { LoginDto } from './dto/login.dto'
-import type { RegisterDto } from './dto/register.dto'
 import { Body, Controller, Post } from '@nestjs/common'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
+import { LoginDto } from './dto/login.dto'
+import { RegisterDto } from './dto/register.dto'
 
+@ApiTags('认证')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto)
+  @ApiOperation({ summary: '用户注册' })
+  async register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto)
   }
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto)
+  @ApiOperation({ summary: '用户登录' })
+  async login(@Body() dto: LoginDto) {
+    return this.authService.login(dto)
   }
 }
