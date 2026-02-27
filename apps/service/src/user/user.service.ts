@@ -1,7 +1,17 @@
+import type { Paginated } from '../common/dto/pagination.dto'
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
+import { PaginationDto } from '../common/dto/pagination.dto'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateUserDto } from './dto/create-user.dto'
+
+export interface UserItem {
+  id: string
+  email: string
+  name: string | null
+  avatar: string | null
+  createdAt: Date
+}
 
 @Injectable()
 export class UserService {
@@ -54,16 +64,35 @@ export class UserService {
     return user
   }
 
-  async findAll() {
-    return this.prisma.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        avatar: true,
-        createdAt: true,
+  async list(dto: PaginationDto): Promise<Paginated<UserItem>> {
+    const { pageIndex, pageSize } = dto
+    const skip = pageIndex * pageSize
+
+    const [items, total] = await Promise.all([
+      this.prisma.user.findMany({
+        skip,
+        take: pageSize,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          avatar: true,
+          createdAt: true,
+        },
+      }),
+      this.prisma.user.count(),
+    ])
+
+    return {
+      items,
+      meta: {
+        total,
+        pageIndex,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize),
       },
-    })
+    }
   }
 
   async remove(id: string): Promise<void> {

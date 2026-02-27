@@ -6,14 +6,40 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  UNKNOWN
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String    @id @default(cuid())
+  email     String    @unique
   password  String
   name      String?
   avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  gender    Gender    @default(UNKNOWN)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  birthday  DateTime?
+
+  pets Pet[]
 
   @@map("users")
+}
+
+model Pet {
+  id        String    @id @default(cuid())
+  nickname  String
+  species   String
+  breed     String?
+  gender    Gender    @default(UNKNOWN)
+  birthday  DateTime?
+  avatar    String?
+  ownerId   String    @map("owner_id")
+  owner     User      @relation(fields: [ownerId], references: [id])
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("pets")
 }

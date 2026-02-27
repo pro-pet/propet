@@ -48,5 +48,10 @@
     "scss",
     "pcss",
     "postcss"
-  ]
+  ],
+  
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma",
+    "editor.formatOnSave": true
+  }
 }

@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
+import { PaginationDto } from '../common/dto/pagination.dto'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserService } from './user.service'
 
@@ -24,9 +25,9 @@ export class UserController {
   }
 
   @Get()
-  @ApiOperation({ summary: '查询所有用户' })
-  async findAll() {
-    return this.userService.findAll()
+  @ApiOperation({ summary: '分页查询用户' })
+  async list(@Query() query: PaginationDto) {
+    return this.userService.list(query)
   }
 
   @Delete(':id')
