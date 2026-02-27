@@ -46,7 +46,7 @@ ProPet is an innovative pet social platform. Unlike traditional social media, we
 | **Tailwind CSS** | 4.1 | Utility-first CSS framework |
 | **shadcn/ui** | - | Radix UI based component library |
 | **Radix UI** | 1.4 | Accessible UI primitives |
-| **Lucide React** | 0.563 | Icon library |
+| **Hugeicons React** | - | Icon library |
 
 ### Backend
 
