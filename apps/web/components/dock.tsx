@@ -1,16 +1,16 @@
-'use client'
+"use client"
 
-import type { IconSvgElement } from '@hugeicons/react'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { LayoutGroup, motion } from 'motion/react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import type { IconSvgElement } from "@hugeicons/react"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { LayoutGroup, motion } from "motion/react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 const ICON_SIZE = 64
 const ICON_GAP = 8
-const ACTIVE_EXTRA_WIDTH = 12
-const dockTransition = { duration: 0.22, ease: 'easeInOut' } as const
+const ACTIVE_EXTRA_WIDTH = 0
+const dockTransition = { duration: 0.22 } as const
 
 export interface DockItem {
   href: string
@@ -20,7 +20,7 @@ export interface DockItem {
 
 export function Dock({ items }: { items: DockItem[] }) {
   const pathname = usePathname()
-  const activeIndex = items.findIndex(tab => pathname.startsWith(tab.href))
+  const activeIndex = items.findIndex((tab) => pathname.startsWith(tab.href))
   const labelRefs = useRef<(HTMLSpanElement | null)[]>([])
   const [labelWidths, setLabelWidths] = useState<number[]>([])
 
@@ -32,8 +32,8 @@ export function Dock({ items }: { items: DockItem[] }) {
 
   useEffect(() => {
     measureLabels()
-    window.addEventListener('resize', measureLabels)
-    return () => window.removeEventListener('resize', measureLabels)
+    window.addEventListener("resize", measureLabels)
+    return () => window.removeEventListener("resize", measureLabels)
   }, [measureLabels])
 
   const getExpandedWidth = (index: number) => {
@@ -69,7 +69,7 @@ export function Dock({ items }: { items: DockItem[] }) {
                   key={tab.href}
                   href={tab.href}
                   aria-label={tab.label}
-                  onClick={isActive ? e => e.preventDefault() : undefined}
+                  onClick={isActive ? (e) => e.preventDefault() : undefined}
                   className="relative z-10"
                 >
                   <motion.div
@@ -80,19 +80,21 @@ export function Dock({ items }: { items: DockItem[] }) {
                     transition={dockTransition}
                     className={`relative flex h-12 items-center justify-center rounded-full transition-colors duration-200 ${
                       isActive
-                        ? 'text-primary-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
+                        ? "text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    {isActive
-                      ? (
-                          <motion.div
-                            layoutId="dock-active-indicator"
-                            transition={dockTransition}
-                            className="bg-primary absolute inset-0 rounded-full"
-                          />
-                        )
-                      : null}
+                    {isActive ? (
+                      <motion.div
+                        layoutId="dock-active-indicator"
+                        transition={{
+                          type: 'spring',
+                          damping: 15,
+                          stiffness: 150,
+                        }}
+                        className="bg-primary absolute inset-0 rounded-full"
+                      />
+                    ) : null}
 
                     <div className="relative z-10 flex items-center overflow-hidden">
                       <HugeiconsIcon
