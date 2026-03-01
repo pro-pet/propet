@@ -8,9 +8,9 @@ import {
 import { Dock } from '@/components/dock'
 
 const items: DockItem[] = [
-  { href: '/community', label: '社区', icon: Home11Icon },
+  { href: '/community', label: '社区', icon: Home11Icon, badge: true },
   { href: '/discover', label: '发现', icon: CompassIcon },
-  { href: '/message', label: '消息', icon: Mail01Icon },
+  { href: '/message', label: '消息', icon: Mail01Icon, badge: 103 },
   { href: '/mine', label: '我的', icon: UserIcon },
 ]
 
