@@ -15,7 +15,7 @@ export default function PetDetailPage({
 
   return (
     <div className="flex flex-col">
-      <header className="bg-background/80 sticky top-0 z-40 border-b backdrop-blur-lg">
+      <header className="bg-background/80 sticky top-0 z-40 backdrop-blur-lg">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
           <Link href="/mine/pets">
             <Button variant="ghost" size="icon">

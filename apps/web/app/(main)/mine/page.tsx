@@ -8,7 +8,7 @@ import Link from 'next/link'
 export default function MinePage() {
   return (
     <div className="flex flex-col">
-      <header className="bg-background/80 sticky top-0 z-40 border-b backdrop-blur-lg">
+      <header className="bg-background/80 sticky top-0 z-40 backdrop-blur-lg">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
           <h1 className="text-xl font-semibold">我的</h1>
           <Link href="/settings">
