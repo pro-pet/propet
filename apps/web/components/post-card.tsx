@@ -1,6 +1,9 @@
+'use client'
+
 import { FavouriteIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import Link from 'next/link'
+import { Button } from '@propet/ui'
+import { motion } from 'motion/react'
 
 export interface PostCardProps {
   id: string
@@ -11,6 +14,18 @@ export interface PostCardProps {
   coverImage?: string
   coverClassName?: string
   badge?: string
+  onOpen?: () => void
+  onAuthorClick?: () => void
+}
+
+export function getPostLayoutIds(id: string) {
+  return {
+    card: `post-card-${id}`,
+    cover: `post-cover-${id}`,
+    title: `post-title-${id}`,
+    meta: `post-meta-${id}`,
+    badge: `post-badge-${id}`,
+  }
 }
 
 export function PostCard({
@@ -22,12 +37,22 @@ export function PostCard({
   coverImage,
   coverClassName,
   badge,
+  onOpen,
+  onAuthorClick,
 }: PostCardProps) {
+  const layoutIds = getPostLayoutIds(id)
+
   return (
-    <article className="mb-4 break-inside-avoid">
-      <Link href={`/post/${id}`} className="block">
-        <div
-          className={`relative overflow-hidden rounded-xl ${coverImage ? 'bg-muted' : coverClassName ?? 'bg-background'}`}
+    <motion.article layoutId={layoutIds.card} className="mb-4 break-inside-avoid">
+      <Button
+        type="button"
+        variant="ghost"
+        onClick={onOpen}
+        className="h-auto w-full flex-col items-stretch justify-start gap-0 whitespace-normal rounded-none border-0 p-0 text-left font-normal hover:bg-transparent focus-visible:ring-primary/40 focus-visible:ring-2 focus-visible:ring-offset-2"
+      >
+        <motion.div
+          layoutId={layoutIds.cover}
+          className={`relative overflow-hidden rounded-lg ${coverImage ? 'bg-muted' : coverClassName ?? 'bg-background'}`}
           style={coverImage
             ? {
                 height: coverHeight,
@@ -40,30 +65,40 @@ export function PostCard({
           <div className="absolute inset-0 bg-linear-to-t from-primary/10 via-transparent to-transparent" />
           {badge
             ? (
-                <span className="bg-background/85 absolute top-2 left-2 rounded-full px-2 py-0.5 text-[11px] font-medium backdrop-blur">
+                <motion.span
+                  layoutId={layoutIds.badge}
+                  className="bg-background/85 absolute top-2 left-2 rounded-full px-2 py-0.5 text-[11px] font-medium backdrop-blur"
+                >
                   {badge}
-                </span>
+                </motion.span>
               )
             : null}
-        </div>
+        </motion.div>
+      </Button>
 
-        <div className="pt-2">
-          <p className="text-sm leading-snug font-medium">{title}</p>
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <div className="flex min-w-0 items-center gap-1.5">
-              <span className="bg-primary text-primary-foreground inline-flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-medium">
-                {author.slice(0, 1)}
-              </span>
-              <span className="text-muted-foreground truncate text-sm">{author}</span>
-            </div>
-
-            <span className="text-muted-foreground inline-flex shrink-0 items-center gap-1 text-xs">
-              <HugeiconsIcon icon={FavouriteIcon} size={14} />
-              {likes}
+      <div className="pt-2">
+        <motion.p layoutId={layoutIds.title} className="text-sm leading-snug font-medium">
+          {title}
+        </motion.p>
+        <motion.div layoutId={layoutIds.meta} className="mt-2 flex items-center justify-between gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={onAuthorClick}
+            className="-ml-1 h-auto min-w-0 rounded-full px-1 py-0.5"
+          >
+            <span className="bg-primary text-primary-foreground inline-flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-medium">
+              {author.slice(0, 1)}
             </span>
-          </div>
-        </div>
-      </Link>
-    </article>
+            <span className="text-muted-foreground truncate text-sm">{author}</span>
+          </Button>
+
+          <span className="text-muted-foreground inline-flex shrink-0 items-center gap-1 text-xs">
+            <HugeiconsIcon icon={FavouriteIcon} size={14} />
+            {likes}
+          </span>
+        </motion.div>
+      </div>
+    </motion.article>
   )
 }

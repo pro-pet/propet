@@ -112,7 +112,7 @@ export default function CommunityPage() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl px-4 pt-4 pb-28 sm:px-6">
+      <main className="mx-auto w-full max-w-5xl px-4 pb-28 sm:px-6">
         <WaterfallFeed posts={communityPosts} />
       </main>
     </div>

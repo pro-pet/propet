@@ -131,7 +131,7 @@ export default function DiscoverPage() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl px-4 pt-4 pb-28 sm:px-6">
+      <main className="mx-auto w-full max-w-5xl px-4 pb-28 sm:px-6">
         <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-1">
           <span className="text-muted-foreground shrink-0 text-xs">最近搜索</span>
           {recentSearches.map(keyword => (

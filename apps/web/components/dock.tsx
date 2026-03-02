@@ -70,7 +70,7 @@ export function Dock({
   return (
     <LayoutGroup id="dock">
       <nav
-        className="bg-primary relative flex items-center rounded-full p-1.5 shadow-2xl backdrop-blur-xl"
+        className="bg-background/80 backdrop-blur-sm relative flex items-center rounded-full p-1.5 shadow-2xl"
         style={{ gap: dockGap }}
       >
         <div aria-hidden className="pointer-events-none absolute opacity-0">
@@ -86,100 +86,100 @@ export function Dock({
             </span>
           ))}
         </div>
-            {items.map((tab, i) => {
-              const isActive = i === activeIndex
-              const labelWidth = labelWidths[i] ?? 0
-              const badge = tab.badge
-              const hasNumberBadge
-                = typeof badge === 'number' && Number.isFinite(badge)
-              const numberBadgeLabel = hasNumberBadge
-                ? badge > normalizedBadgeMax
-                  ? `${normalizedBadgeMax}+`
-                  : String(badge)
-                : null
-              const hasBadge = badge === true || hasNumberBadge
+        {items.map((tab, i) => {
+          const isActive = i === activeIndex
+          const labelWidth = labelWidths[i] ?? 0
+          const badge = tab.badge
+          const hasNumberBadge
+            = typeof badge === 'number' && Number.isFinite(badge)
+          const numberBadgeLabel = hasNumberBadge
+            ? badge > normalizedBadgeMax
+              ? `${normalizedBadgeMax}+`
+              : String(badge)
+            : null
+          const hasBadge = badge === true || hasNumberBadge
 
-              return (
-                <Link
-                  key={tab.href}
-                  href={tab.href}
-                  aria-label={tab.label}
-                  onClick={isActive ? e => e.preventDefault() : undefined}
-                  className="relative z-10"
-                >
-                  <motion.div
-                    initial={false}
-                    animate={{
-                      width: isActive ? getExpandedWidth(i) : itemWidth,
-                    }}
-                    transition={dockTransition}
-                    className={`relative flex items-center justify-center rounded-full transition-colors duration-200 ${
-                      isActive
-                        ? 'text-primary'
-                        : 'text-primary-foreground'
-                    }`}
-                    style={{ height: itemHeight }}
-                  >
-                    {isActive
+          return (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              aria-label={tab.label}
+              onClick={isActive ? e => e.preventDefault() : undefined}
+              className="relative z-10"
+            >
+              <motion.div
+                initial={false}
+                animate={{
+                  width: isActive ? getExpandedWidth(i) : itemWidth,
+                }}
+                transition={dockTransition}
+                className={`relative flex items-center justify-center rounded-full transition-colors duration-200 ${
+                  isActive
+                    ? 'text-primary-foreground'
+                    : 'text-primary'
+                }`}
+                style={{ height: itemHeight }}
+              >
+                {isActive
+                  ? (
+                      <motion.div
+                        layoutId="dock-active-indicator"
+                        transition={{
+                          type: 'spring',
+                          damping: 15,
+                          stiffness: 150,
+                        }}
+                        className="bg-primary absolute inset-0 rounded-full"
+                      />
+                    )
+                  : null}
+
+                <div className="relative z-10 flex items-center">
+                  <div className="relative shrink-0">
+                    <HugeiconsIcon
+                      icon={tab.icon}
+                      size={iconSize}
+                    />
+                    {hasBadge
                       ? (
-                          <motion.div
-                            layoutId="dock-active-indicator"
-                            transition={{
-                              type: 'spring',
-                              damping: 15,
-                              stiffness: 150,
-                            }}
-                            className="bg-primary-foreground absolute inset-0 rounded-full"
-                          />
+                          <span
+                            className="absolute top-0 right-0 z-20 flex translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-red-500 text-[10px] leading-none font-semibold text-white"
+                            style={hasNumberBadge
+                              ? {
+                                  minWidth: 16,
+                                  height: 16,
+                                  paddingInline: 4,
+                                }
+                              : { width: 8, height: 8 }}
+                          >
+                            {numberBadgeLabel}
+                          </span>
                         )
                       : null}
-
-                    <div className="relative z-10 flex items-center">
-                      <div className="relative shrink-0">
-                        <HugeiconsIcon
-                          icon={tab.icon}
-                          size={iconSize}
-                        />
-                        {hasBadge
-                          ? (
-                              <span
-                                className="absolute top-0 right-0 z-20 flex translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-red-500 text-[10px] leading-none font-semibold text-white"
-                                style={hasNumberBadge
-                                  ? {
-                                      minWidth: 16,
-                                      height: 16,
-                                      paddingInline: 4,
-                                    }
-                                  : { width: 8, height: 8 }}
-                              >
-                                {numberBadgeLabel}
-                              </span>
-                            )
-                          : null}
-                      </div>
-                      <motion.span
-                        aria-hidden
-                        initial={false}
-                        animate={{ width: isActive ? labelGap : 0 }}
-                        transition={dockTransition}
-                        className="block shrink-0"
-                      />
-                      <motion.span
-                        initial={false}
-                        animate={{
-                          maxWidth: isActive ? labelWidth : 0,
-                          opacity: isActive ? 1 : 0,
-                        }}
-                        transition={dockTransition}
-                        className="inline-block overflow-hidden text-sm font-medium whitespace-nowrap text-primary"
-                      >
-                        {tab.label}
-                      </motion.span>
-                    </div>
-                  </motion.div>
-                </Link>
-              )
-            })}
+                  </div>
+                  <motion.span
+                    aria-hidden
+                    initial={false}
+                    animate={{ width: isActive ? labelGap : 0 }}
+                    transition={dockTransition}
+                    className="block shrink-0"
+                  />
+                  <motion.span
+                    initial={false}
+                    animate={{
+                      maxWidth: isActive ? labelWidth : 0,
+                      opacity: isActive ? 1 : 0,
+                    }}
+                    transition={dockTransition}
+                    className="inline-block overflow-hidden text-sm font-medium whitespace-nowrap text-primary-foreground"
+                  >
+                    {tab.label}
+                  </motion.span>
+                </div>
+              </motion.div>
+            </Link>
+          )
+        })}
       </nav>
     </LayoutGroup>
   )
