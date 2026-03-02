@@ -12,10 +12,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
     "@hugeicons/core-free-icons": "catalog:",
     "@hugeicons/react": "catalog:",
     "@propet/ui": "workspace:*",
     "dotenv": "^17.2.4",
+    "emoji-mart": "^5.6.0",
     "mathjs": "^15.1.1",
     "motion": "catalog:",
     "next": "16.1.6",

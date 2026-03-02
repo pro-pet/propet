@@ -1,9 +1,13 @@
 'use client'
 
-import { Add01Icon, AtIcon, Bookmark01Icon, Comment01Icon, FavouriteIcon, Navigation03Icon, Share01Icon } from '@hugeicons/core-free-icons'
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
+import { Add01Icon, AtIcon, Bookmark01Icon, Comment01Icon, FavouriteIcon, Navigation03Icon, Share01Icon, SmileIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Button, Input } from '@propet/ui'
+import { Popover, PopoverContent, PopoverTrigger } from '@propet/ui/components/popover'
 import { motion } from 'motion/react'
+import { useState } from 'react'
 import { getPostLayoutIds } from '@/components/post-card'
 import { PostCommentItem } from '@/components/post-comment-item'
 
@@ -41,6 +45,15 @@ export function ExpandedPostCard({
   onClose,
 }: ExpandedPostCardProps) {
   const layoutIds = getPostLayoutIds(post.id)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  const [commentText, setCommentText] = useState('')
+
+  const handleEmojiSelect = (emoji: { native?: string }) => {
+    if (!emoji.native)
+      return
+    setCommentText(prev => prev + emoji.native)
+    setShowEmojiPicker(false)
+  }
 
   return (
     <>
@@ -61,7 +74,7 @@ export function ExpandedPostCard({
           <div className="grid h-full w-full md:grid-cols-[1.1fr_1fr]">
             <motion.div
               layoutId={layoutIds.cover}
-              className={`relative min-h-[280px] md:min-h-full ${post.coverImage ? 'bg-muted' : post.coverClassName ?? 'bg-background'}`}
+              className={`relative z-30 min-h-[280px] md:min-h-full ${post.coverImage ? 'bg-muted' : post.coverClassName ?? 'bg-background'}`}
               style={post.coverImage
                 ? {
                     backgroundImage: `url(${post.coverImage})`,
@@ -159,13 +172,37 @@ export function ExpandedPostCard({
                         <HugeiconsIcon icon={Bookmark01Icon} size={20} />
                         {post.likes}
                       </span>
-                      <Button size="icon" variant="ghost" className="size-8 rounded-full">
-                        <HugeiconsIcon icon={Share01Icon} size={16} />
+                      <span>
+                        <HugeiconsIcon icon={Share01Icon} size={20} />
                         <span className="sr-only">分享</span>
-                      </Button>
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-2">
+                      <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                          >
+                            <HugeiconsIcon icon={SmileIcon} size={20} />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          side="top"
+                          align="start"
+                          sideOffset={8}
+                          className="z-340 w-auto gap-0 overflow-hidden rounded-2xl border p-0 shadow-xl"
+                          onOpenAutoFocus={event => event.preventDefault()}
+                        >
+                          <Picker
+                            data={data}
+                            onEmojiSelect={handleEmojiSelect}
+                            previewPosition="none"
+                            skinTonePosition="none"
+                          />
+                        </PopoverContent>
+                      </Popover>
                       <Button size="icon" variant="ghost">
                         <HugeiconsIcon icon={AtIcon} size={20} />
                       </Button>
@@ -173,6 +210,8 @@ export function ExpandedPostCard({
                         <Input
                           placeholder="写评论"
                           className="h-10 rounded-full bg-background px-4 text-sm"
+                          value={commentText}
+                          onChange={event => setCommentText(event.target.value)}
                         />
                       </div>
                       <Button className="size-10 rounded-full">
