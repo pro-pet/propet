@@ -7,6 +7,7 @@ import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { getPostLayoutIds, PostCard } from '@/components/post-card'
+import { PostCommentItem } from '@/components/post-comment-item'
 
 export interface WaterfallPost {
   id: string
@@ -47,6 +48,9 @@ interface PostComment {
   author: string
   content: string
   time: string
+  likeCount: number
+  commentCount: number
+  isReply: boolean
 }
 
 function createComments(post: WaterfallPost): PostComment[] {
@@ -56,12 +60,18 @@ function createComments(post: WaterfallPost): PostComment[] {
     const author = COMMENT_AUTHORS[(seed + index) % COMMENT_AUTHORS.length]!
     const content = COMMENT_TEXTS[(seed + index * 2) % COMMENT_TEXTS.length]!
     const time = COMMENT_TIMES[(seed + index * 3) % COMMENT_TIMES.length]!
+    const likeCount = (seed * 3 + index * 7) % 99
+    const commentCount = (seed + index * 5) % 16
+    const isReply = index % 3 === 2
 
     return {
       id: `${post.id}-comment-${index}`,
       author,
       content,
       time,
+      likeCount,
+      commentCount,
+      isReply,
     }
   })
 }
@@ -195,8 +205,7 @@ export function WaterfallFeed({ posts }: WaterfallFeedProps) {
                               </div>
 
                               <p className="text-muted-foreground text-sm leading-6">
-                                这是展开后的帖子详情区域。你可以在这里放正文、图文步骤、购买清单或遛狗路线笔记，
-                                保持信息完整但阅读轻盈。
+                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum aperiam qui explicabo eveniet nobis! Quisquam aperiam cupiditate, nulla sit nisi exercitationem a asperiores est iste molestiae architecto laboriosam, officia ducimus?
                               </p>
                               <p className="text-muted-foreground mt-3 text-xs">
                                 发布于
@@ -206,22 +215,18 @@ export function WaterfallFeed({ posts }: WaterfallFeedProps) {
                             </section>
 
                             <section>
-                              <h3 className="mb-3 text-sm font-semibold">
-                                评论（
-                                {activeComments.length}
-                                ）
-                              </h3>
-                              <div className="space-y-4">
-                                {activeComments.map(comment => (
-                                  <article key={comment.id} className="bg-muted/45 rounded-2xl px-4 py-3">
-                                    <div className="mb-1 flex items-center justify-between gap-2">
-                                      <span className="text-sm font-medium">{comment.author}</span>
-                                      <span className="text-muted-foreground text-xs">{comment.time}</span>
-                                    </div>
-                                    <p className="text-sm leading-6">{comment.content}</p>
-                                  </article>
-                                ))}
-                              </div>
+                              <h3 className="mb-3 text-sm font-semibold">{`${activeComments.length}条评论`}</h3>
+                              {activeComments.map(comment => (
+                                <PostCommentItem
+                                  key={comment.id}
+                                  author={comment.author}
+                                  content={comment.content}
+                                  time={comment.time}
+                                  likeCount={comment.likeCount}
+                                  commentCount={comment.commentCount}
+                                  isReply={comment.isReply}
+                                />
+                              ))}
                             </section>
                           </div>
                         </div>
