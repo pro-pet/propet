@@ -1,13 +1,12 @@
 'use client'
 
-import data from '@emoji-mart/data'
-import Picker from '@emoji-mart/react'
 import { Add01Icon, AtIcon, Bookmark01Icon, Comment01Icon, FavouriteIcon, Navigation03Icon, Share01Icon, SmileIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Button, Input } from '@propet/ui'
 import { Popover, PopoverContent, PopoverTrigger } from '@propet/ui/components/popover'
 import { motion } from 'motion/react'
 import { useState } from 'react'
+import { EmojiPicker } from '@/components/emoji-picker'
 import { getPostLayoutIds } from '@/components/post-card'
 import { PostCommentItem } from '@/components/post-comment-item'
 
@@ -159,26 +158,26 @@ export function ExpandedPostCard({
               <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20">
                 <div className="border-border/70 bg-background/70 supports-backdrop-filter:bg-background/55 pointer-events-auto border-t px-4 py-3 backdrop-blur-xl">
                   <div className="space-y-2.5">
-                    <div className="text-muted-foreground flex items-center gap-4 text-sm">
-                      <span className="inline-flex items-center gap-1">
+                    <div className="text-muted-foreground flex items-center text-sm">
+                      <Button variant="ghost">
                         <HugeiconsIcon icon={FavouriteIcon} size={24} />
                         {post.likes}
-                      </span>
-                      <span className="inline-flex items-center gap-1">
+                      </Button>
+                      <Button variant="ghost">
                         <HugeiconsIcon icon={Comment01Icon} size={24} />
                         {comments.length}
-                      </span>
-                      <span className="inline-flex items-center gap-1">
+                      </Button>
+                      <Button variant="ghost">
                         <HugeiconsIcon icon={Bookmark01Icon} size={20} />
                         {post.likes}
-                      </span>
-                      <span>
+                      </Button>
+                      <Button variant="ghost">
                         <HugeiconsIcon icon={Share01Icon} size={20} />
                         <span className="sr-only">分享</span>
-                      </span>
+                      </Button>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 mt-2">
                       <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
                         <PopoverTrigger asChild>
                           <Button
@@ -195,12 +194,7 @@ export function ExpandedPostCard({
                           className="z-340 w-auto gap-0 overflow-hidden rounded-2xl border p-0 shadow-xl"
                           onOpenAutoFocus={event => event.preventDefault()}
                         >
-                          <Picker
-                            data={data}
-                            onEmojiSelect={handleEmojiSelect}
-                            previewPosition="none"
-                            skinTonePosition="none"
-                          />
+                          <EmojiPicker onEmojiSelect={handleEmojiSelect} />
                         </PopoverContent>
                       </Popover>
                       <Button size="icon" variant="ghost">
