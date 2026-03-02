@@ -68,27 +68,24 @@ export function Dock({
   }
 
   return (
-    <>
-      <div aria-hidden className="pointer-events-none fixed opacity-0">
-        {items.map((tab, index) => (
-          <span
-            key={tab.href}
-            ref={(element) => {
-              labelRefs.current[index] = element
-            }}
-            className="text-sm font-medium whitespace-nowrap"
-          >
-            {tab.label}
-          </span>
-        ))}
-      </div>
-
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center pb-6">
-        <LayoutGroup id="dock">
-          <nav
-            className="bg-background/70 ring-border/50 pointer-events-auto relative flex items-center rounded-full p-1.5 shadow-lg ring-1 backdrop-blur-xl"
-            style={{ gap: dockGap }}
-          >
+    <LayoutGroup id="dock">
+      <nav
+        className="bg-primary relative flex items-center rounded-full p-1.5 shadow-2xl backdrop-blur-xl"
+        style={{ gap: dockGap }}
+      >
+        <div aria-hidden className="pointer-events-none absolute opacity-0">
+          {items.map((tab, index) => (
+            <span
+              key={tab.href}
+              ref={(element) => {
+                labelRefs.current[index] = element
+              }}
+              className="text-sm font-medium whitespace-nowrap"
+            >
+              {tab.label}
+            </span>
+          ))}
+        </div>
             {items.map((tab, i) => {
               const isActive = i === activeIndex
               const labelWidth = labelWidths[i] ?? 0
@@ -118,8 +115,8 @@ export function Dock({
                     transition={dockTransition}
                     className={`relative flex items-center justify-center rounded-full transition-colors duration-200 ${
                       isActive
-                        ? 'text-primary-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
+                        ? 'text-primary'
+                        : 'text-primary-foreground'
                     }`}
                     style={{ height: itemHeight }}
                   >
@@ -132,7 +129,7 @@ export function Dock({
                               damping: 15,
                               stiffness: 150,
                             }}
-                            className="bg-primary absolute inset-0 rounded-full"
+                            className="bg-primary-foreground absolute inset-0 rounded-full"
                           />
                         )
                       : null}
@@ -174,7 +171,7 @@ export function Dock({
                           opacity: isActive ? 1 : 0,
                         }}
                         transition={dockTransition}
-                        className="inline-block overflow-hidden text-sm font-medium whitespace-nowrap"
+                        className="inline-block overflow-hidden text-sm font-medium whitespace-nowrap text-primary"
                       >
                         {tab.label}
                       </motion.span>
@@ -183,9 +180,7 @@ export function Dock({
                 </Link>
               )
             })}
-          </nav>
-        </LayoutGroup>
-      </div>
-    </>
+      </nav>
+    </LayoutGroup>
   )
 }
