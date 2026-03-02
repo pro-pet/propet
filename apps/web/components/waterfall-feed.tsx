@@ -1,13 +1,10 @@
 'use client'
 
-import { Add01Icon, Comment01Icon, FavouriteIcon } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Button, Input } from '@propet/ui'
-import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
+import { AnimatePresence, LayoutGroup } from 'motion/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { getPostLayoutIds, PostCard } from '@/components/post-card'
-import { PostCommentItem } from '@/components/post-comment-item'
+import { ExpandedPostCard } from '@/components/expanded-post-card'
+import { PostCard } from '@/components/post-card'
 
 export interface WaterfallPost {
   id: string
@@ -135,125 +132,12 @@ export function WaterfallFeed({ posts }: WaterfallFeedProps) {
       <AnimatePresence>
         {activePost
           ? (
-              <>
-                <motion.div
-                  aria-hidden
-                  className="fixed inset-0 z-320 bg-black/50 backdrop-blur-sm"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setActivePost(null)}
-                />
-                <div className="pointer-events-none fixed inset-0 z-330 flex items-center justify-center p-3 sm:p-6">
-                  <motion.section
-                    layoutId={getPostLayoutIds(activePost.id).card}
-                    className="bg-background pointer-events-auto flex h-[90vh] w-full max-w-6xl overflow-hidden rounded-3xl shadow-2xl"
-                    onClick={event => event.stopPropagation()}
-                  >
-                    <div className="grid h-full w-full md:grid-cols-[1.1fr_1fr]">
-                      <motion.div
-                        layoutId={getPostLayoutIds(activePost.id).cover}
-                        className={`relative min-h-[280px] md:min-h-full ${activePost.coverImage ? 'bg-muted' : activePost.coverClassName ?? 'bg-background'}`}
-                        style={activePost.coverImage
-                          ? {
-                              backgroundImage: `url(${activePost.coverImage})`,
-                              backgroundPosition: 'center',
-                              backgroundSize: 'cover',
-                            }
-                          : undefined}
-                      >
-                        <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent" />
-                      </motion.div>
-
-                      <div className="flex min-h-0 flex-col">
-                        <div className="border-border/70 border-b py-4 px-4">
-                          <div className="flex items-center justify-between gap-3">
-                            <motion.div
-                              layoutId={getPostLayoutIds(activePost.id).meta}
-                              className="flex min-w-0 items-center gap-2"
-                            >
-                              <span className="bg-primary text-primary-foreground inline-flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-medium">
-                                {activePost.author.slice(0, 1)}
-                              </span>
-                              <span className="truncate text-base font-semibold">{activePost.author}</span>
-                            </motion.div>
-
-                            <Button size="lg" className="rounded-full">
-                              <HugeiconsIcon icon={Add01Icon} size={14} />
-                              关注
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6">
-                          <div className="space-y-6">
-                            <section>
-                              <div className="mb-3 flex items-center gap-2">
-                                {activePost.badge
-                                  ? (
-                                      <motion.span
-                                        layoutId={getPostLayoutIds(activePost.id).badge}
-                                        className="bg-primary/10 text-primary inline-flex rounded-full px-3 py-1 text-xs font-medium"
-                                      >
-                                        {activePost.badge}
-                                      </motion.span>
-                                    )
-                                  : null}
-                                <motion.h2 layoutId={getPostLayoutIds(activePost.id).title} className="text-xl leading-tight font-semibold">
-                                  {activePost.title}
-                                </motion.h2>
-                              </div>
-
-                              <p className="text-muted-foreground text-sm leading-6">
-                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum aperiam qui explicabo eveniet nobis! Quisquam aperiam cupiditate, nulla sit nisi exercitationem a asperiores est iste molestiae architecto laboriosam, officia ducimus?
-                              </p>
-                              <p className="text-muted-foreground mt-3 text-xs">
-                                发布于
-                                {' '}
-                                {activePublishTime}
-                              </p>
-                            </section>
-
-                            <section>
-                              <h3 className="mb-3 text-sm font-semibold">{`${activeComments.length}条评论`}</h3>
-                              {activeComments.map(comment => (
-                                <PostCommentItem
-                                  key={comment.id}
-                                  author={comment.author}
-                                  content={comment.content}
-                                  time={comment.time}
-                                  likeCount={comment.likeCount}
-                                  commentCount={comment.commentCount}
-                                  isReply={comment.isReply}
-                                />
-                              ))}
-                            </section>
-                          </div>
-                        </div>
-
-                        <div className="border-border/70 bg-muted/30 border-t px-5 py-3 sm:px-6">
-                          <div className="flex items-center gap-3">
-                            <Input
-                              placeholder="写评论，分享你的经验..."
-                              className="h-10 flex-1 rounded-full bg-background px-4 text-sm"
-                            />
-                            <div className="text-muted-foreground flex shrink-0 items-center gap-3 text-sm">
-                              <span className="inline-flex items-center gap-1">
-                                <HugeiconsIcon icon={FavouriteIcon} size={16} />
-                                {activePost.likes}
-                              </span>
-                              <span className="inline-flex items-center gap-1">
-                                <HugeiconsIcon icon={Comment01Icon} size={16} />
-                                {activeComments.length}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.section>
-                </div>
-              </>
+              <ExpandedPostCard
+                post={activePost}
+                comments={activeComments}
+                publishTime={activePublishTime}
+                onClose={() => setActivePost(null)}
+              />
             )
           : null}
       </AnimatePresence>
