@@ -24,7 +24,7 @@ function getAvatarStyle(author: string) {
   return AVATAR_STYLES[seed % AVATAR_STYLES.length]!
 }
 
-export function PostCommentItem({
+export function PostComment({
   author,
   content,
   time,

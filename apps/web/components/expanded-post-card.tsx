@@ -8,7 +8,7 @@ import { motion } from 'motion/react'
 import { useState } from 'react'
 import { Avatar } from '@/components/avatar'
 import { getPostLayoutIds } from '@/components/post-card'
-import { PostCommentItem } from '@/components/post-comment-item'
+import { PostComment } from '@/components/post-comment'
 
 interface ExpandedPostCardPost {
   id: string
@@ -47,7 +47,7 @@ export function ExpandedPostCard({
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [commentText, setCommentText] = useState('')
 
-  const handleEmojiSelect = (emoji: { native?: string }) => {
+  function handleEmojiSelect(emoji: { native?: string }) {
     if (!emoji.native)
       return
     setCommentText(prev => prev + emoji.native)
@@ -97,7 +97,6 @@ export function ExpandedPostCard({
                         size="lg"
                         name={post.author}
                         fallback={post.author.slice(0, 1)}
-                        className="size-9 shrink-0"
                       />
                       <span className="truncate text-base font-semibold">{post.author}</span>
                     </motion.div>
@@ -139,19 +138,17 @@ export function ExpandedPostCard({
 
                   <section>
                     <h3 className="mb-3 text-sm font-semibold">{`${comments.length}条评论`}</h3>
-                    <div className="space-y-4">
-                      {comments.map(comment => (
-                        <PostCommentItem
-                          key={comment.id}
-                          author={comment.author}
-                          content={comment.content}
-                          time={comment.time}
-                          likeCount={comment.likeCount}
-                          commentCount={comment.commentCount}
-                          isReply={comment.isReply}
-                        />
-                      ))}
-                    </div>
+                    {comments.map(comment => (
+                      <PostComment
+                        key={comment.id}
+                        author={comment.author}
+                        content={comment.content}
+                        time={comment.time}
+                        likeCount={comment.likeCount}
+                        commentCount={comment.commentCount}
+                        isReply={comment.isReply}
+                      />
+                    ))}
                   </section>
                 </div>
               </div>
@@ -181,10 +178,7 @@ export function ExpandedPostCard({
                     <div className="flex items-center gap-2 mt-2">
                       <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
                         <PopoverTrigger asChild>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                          >
+                          <Button size="icon" variant="ghost">
                             <HugeiconsIcon icon={SmileIcon} />
                           </Button>
                         </PopoverTrigger>
