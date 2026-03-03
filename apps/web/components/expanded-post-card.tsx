@@ -2,11 +2,11 @@
 
 import { Add01Icon, AtIcon, Bookmark01Icon, Comment01Icon, FavouriteIcon, Navigation03Icon, Share01Icon, SmileIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Button, Input } from '@propet/ui'
+import { Button, EmojiPicker, Input } from '@propet/ui'
 import { Popover, PopoverContent, PopoverTrigger } from '@propet/ui/components/popover'
 import { motion } from 'motion/react'
 import { useState } from 'react'
-import { EmojiPicker } from '@/components/emoji-picker'
+import { Avatar } from '@/components/avatar'
 import { getPostLayoutIds } from '@/components/post-card'
 import { PostCommentItem } from '@/components/post-comment-item'
 
@@ -93,9 +93,12 @@ export function ExpandedPostCard({
                       layoutId={layoutIds.meta}
                       className="flex min-w-0 items-center gap-2"
                     >
-                      <span className="bg-primary text-primary-foreground inline-flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-medium">
-                        {post.author.slice(0, 1)}
-                      </span>
+                      <Avatar
+                        size="lg"
+                        name={post.author}
+                        fallback={post.author.slice(0, 1)}
+                        className="size-9 shrink-0"
+                      />
                       <span className="truncate text-base font-semibold">{post.author}</span>
                     </motion.div>
 
@@ -111,16 +114,14 @@ export function ExpandedPostCard({
                 <div className="space-y-6">
                   <section>
                     <div className="mb-3 flex items-center gap-2">
-                      {post.badge
-                        ? (
-                            <motion.span
-                              layoutId={layoutIds.badge}
-                              className="bg-primary/10 text-primary inline-flex rounded-full px-3 py-1 text-xs font-medium"
-                            >
-                              {post.badge}
-                            </motion.span>
-                          )
-                        : null}
+                      {post.badge && (
+                        <motion.span
+                          layoutId={layoutIds.badge}
+                          className="bg-primary/10 text-primary inline-flex rounded-full px-3 py-1 text-xs font-medium"
+                        >
+                          {post.badge}
+                        </motion.span>
+                      )}
                       <motion.h2 layoutId={layoutIds.title} className="text-xl leading-tight font-semibold">
                         {post.title}
                       </motion.h2>
@@ -160,11 +161,11 @@ export function ExpandedPostCard({
                   <div className="space-y-2.5">
                     <div className="text-muted-foreground flex items-center text-sm">
                       <Button variant="ghost">
-                        <HugeiconsIcon icon={FavouriteIcon} size={24} />
+                        <HugeiconsIcon icon={FavouriteIcon} size={20} />
                         {post.likes}
                       </Button>
                       <Button variant="ghost">
-                        <HugeiconsIcon icon={Comment01Icon} size={24} />
+                        <HugeiconsIcon icon={Comment01Icon} size={20} />
                         {comments.length}
                       </Button>
                       <Button variant="ghost">
@@ -184,7 +185,7 @@ export function ExpandedPostCard({
                             size="icon"
                             variant="ghost"
                           >
-                            <HugeiconsIcon icon={SmileIcon} size={20} />
+                            <HugeiconsIcon icon={SmileIcon} />
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent
@@ -198,7 +199,7 @@ export function ExpandedPostCard({
                         </PopoverContent>
                       </Popover>
                       <Button size="icon" variant="ghost">
-                        <HugeiconsIcon icon={AtIcon} size={20} />
+                        <HugeiconsIcon icon={AtIcon} />
                       </Button>
                       <div className="min-w-0 flex-1">
                         <Input

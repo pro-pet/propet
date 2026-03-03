@@ -2,8 +2,9 @@
 
 import { FavouriteIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Button } from '@propet/ui'
+import { Button, cn } from '@propet/ui'
 import { motion } from 'motion/react'
+import { Avatar } from '@/components/avatar'
 
 export interface PostCardProps {
   id: string
@@ -14,6 +15,7 @@ export interface PostCardProps {
   coverImage?: string
   coverClassName?: string
   badge?: string
+  className?: string
   onOpen?: () => void
   onAuthorClick?: () => void
 }
@@ -37,13 +39,14 @@ export function PostCard({
   coverImage,
   coverClassName,
   badge,
+  className,
   onOpen,
   onAuthorClick,
 }: PostCardProps) {
   const layoutIds = getPostLayoutIds(id)
 
   return (
-    <motion.article layoutId={layoutIds.card} className="mb-4 break-inside-avoid">
+    <motion.article layoutId={layoutIds.card} className={cn('break-inside-avoid', className)}>
       <Button
         type="button"
         variant="ghost"
@@ -64,15 +67,14 @@ export function PostCard({
         >
           <div className="absolute inset-0 bg-linear-to-t from-primary/10 via-transparent to-transparent" />
           {badge
-            ? (
-                <motion.span
-                  layoutId={layoutIds.badge}
-                  className="bg-background/85 absolute top-2 left-2 rounded-full px-2 py-0.5 text-[11px] font-medium backdrop-blur"
-                >
-                  {badge}
-                </motion.span>
-              )
-            : null}
+            && (
+              <motion.span
+                layoutId={layoutIds.badge}
+                className="bg-background/85 absolute top-2 left-2 rounded-full px-2 py-0.5 text-[11px] font-medium backdrop-blur"
+              >
+                {badge}
+              </motion.span>
+            )}
         </motion.div>
       </Button>
 
@@ -87,9 +89,12 @@ export function PostCard({
             onClick={onAuthorClick}
             className="-ml-1 h-auto min-w-0 rounded-full px-1 py-0.5"
           >
-            <span className="bg-primary text-primary-foreground inline-flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-medium">
-              {author.slice(0, 1)}
-            </span>
+            <Avatar
+              size="sm"
+              name={author}
+              fallback={author.slice(0, 1)}
+              className="shrink-0"
+            />
             <span className="text-muted-foreground truncate text-sm">{author}</span>
           </Button>
 

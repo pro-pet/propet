@@ -125,6 +125,7 @@ export function WaterfallFeed({ posts }: WaterfallFeedProps) {
             {...post}
             onOpen={() => setActivePost(post)}
             onAuthorClick={() => router.push(`/user/${encodeURIComponent(post.author)}`)}
+            className="mb-4"
           />
         ))}
       </div>

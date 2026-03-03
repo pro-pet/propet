@@ -156,12 +156,6 @@ importers:
 
   apps/web:
     dependencies:
-      '@emoji-mart/data':
-        specifier: ^1.2.1
-        version: 1.2.1
-      '@emoji-mart/react':
-        specifier: ^1.1.1
-        version: 1.1.1(emoji-mart@5.6.0)(react@19.2.4)
       '@hugeicons/core-free-icons':
         specifier: 'catalog:'
         version: 3.3.0
@@ -174,9 +168,6 @@ importers:
       dotenv:
         specifier: ^17.2.4
         version: 17.2.4
-      emoji-mart:
-        specifier: ^5.6.0
-        version: 5.6.0
       mathjs:
         specifier: ^15.1.1
         version: 15.1.1
@@ -249,6 +240,12 @@ importers:
 
   packages/ui:
     dependencies:
+      '@emoji-mart/data':
+        specifier: ^1.2.1
+        version: 1.2.1
+      '@emoji-mart/react':
+        specifier: ^1.1.1
+        version: 1.1.1(emoji-mart@5.6.0)(react@19.2.4)
       '@hugeicons/core-free-icons':
         specifier: 'catalog:'
         version: 3.3.0
@@ -264,6 +261,9 @@ importers:
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.2.4)
+      emoji-mart:
+        specifier: ^5.6.0
+        version: 5.6.0
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
