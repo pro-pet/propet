@@ -1,13 +1,12 @@
 'use client'
 
-import { Add01Icon, AtIcon, Bookmark01Icon, Comment01Icon, FavouriteIcon, Navigation03Icon, Share01Icon, SmileIcon } from '@hugeicons/core-free-icons'
+import { Add01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Avatar, Button, EmojiPicker, Input } from '@propet/ui'
-import { Popover, PopoverContent, PopoverTrigger } from '@propet/ui/components/popover'
+import { Avatar, Button } from '@propet/ui'
 import { motion } from 'motion/react'
-import { useState } from 'react'
 import { getPostLayoutIds } from '@/components/post-card'
 import { PostComment } from '@/components/post-comment'
+import { PostEngagementBar } from '@/components/post-engagement-bar'
 
 interface ExpandedPostCardPost {
   id: string
@@ -43,15 +42,6 @@ export function ExpandedPostCard({
   onClose,
 }: ExpandedPostCardProps) {
   const layoutIds = getPostLayoutIds(post.id)
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
-  const [commentText, setCommentText] = useState('')
-
-  function handleEmojiSelect(emoji: { native?: string }) {
-    if (!emoji.native)
-      return
-    setCommentText(prev => prev + emoji.native)
-    setShowEmojiPicker(false)
-  }
 
   return (
     <>
@@ -152,64 +142,12 @@ export function ExpandedPostCard({
                 </div>
               </div>
 
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20">
-                <div className="border-border/70 bg-background/70 supports-backdrop-filter:bg-background/55 pointer-events-auto border-t px-4 py-3 backdrop-blur-xl">
-                  <div className="space-y-2.5">
-                    <div className="text-muted-foreground flex items-center text-sm">
-                      <Button variant="ghost">
-                        <HugeiconsIcon icon={FavouriteIcon} size={20} />
-                        {post.likes}
-                      </Button>
-                      <Button variant="ghost">
-                        <HugeiconsIcon icon={Comment01Icon} size={20} />
-                        {comments.length}
-                      </Button>
-                      <Button variant="ghost">
-                        <HugeiconsIcon icon={Bookmark01Icon} size={20} />
-                        {post.likes}
-                      </Button>
-                      <Button variant="ghost">
-                        <HugeiconsIcon icon={Share01Icon} size={20} />
-                        <span className="sr-only">分享</span>
-                      </Button>
-                    </div>
-
-                    <div className="flex items-center gap-2 mt-2">
-                      <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
-                        <PopoverTrigger asChild>
-                          <Button size="icon" variant="ghost">
-                            <HugeiconsIcon icon={SmileIcon} />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent
-                          side="top"
-                          align="start"
-                          sideOffset={8}
-                          className="z-340 w-auto gap-0 overflow-hidden rounded-2xl border p-0 shadow-xl"
-                          onOpenAutoFocus={event => event.preventDefault()}
-                        >
-                          <EmojiPicker onEmojiSelect={handleEmojiSelect} />
-                        </PopoverContent>
-                      </Popover>
-                      <Button size="icon" variant="ghost">
-                        <HugeiconsIcon icon={AtIcon} />
-                      </Button>
-                      <div className="min-w-0 flex-1">
-                        <Input
-                          placeholder="写评论"
-                          className="h-10 rounded-full bg-background px-4 text-sm"
-                          value={commentText}
-                          onChange={event => setCommentText(event.target.value)}
-                        />
-                      </div>
-                      <Button className="size-10 rounded-full">
-                        <HugeiconsIcon icon={Navigation03Icon} size={16} />
-                        <span className="sr-only">发送</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <PostEngagementBar
+                className="pointer-events-none absolute inset-x-0 bottom-0 z-20"
+                likes={post.likes}
+                commentCount={comments.length}
+                bookmarkCount={post.likes}
+              />
             </div>
           </div>
         </motion.section>
