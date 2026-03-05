@@ -2,11 +2,10 @@
 
 import { Add01Icon, AtIcon, Bookmark01Icon, Comment01Icon, FavouriteIcon, Navigation03Icon, Share01Icon, SmileIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Button, EmojiPicker, Input } from '@propet/ui'
+import { Avatar, Button, EmojiPicker, Input } from '@propet/ui'
 import { Popover, PopoverContent, PopoverTrigger } from '@propet/ui/components/popover'
 import { motion } from 'motion/react'
 import { useState } from 'react'
-import { Avatar } from '@/components/avatar'
 import { getPostLayoutIds } from '@/components/post-card'
 import { PostComment } from '@/components/post-comment'
 

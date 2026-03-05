@@ -2,9 +2,8 @@
 
 import { FavouriteIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Button, cn } from '@propet/ui'
+import { Avatar, Button, cn } from '@propet/ui'
 import { motion } from 'motion/react'
-import { Avatar } from '@/components/avatar'
 
 export interface PostCardProps {
   id: string

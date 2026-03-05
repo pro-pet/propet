@@ -5,7 +5,7 @@ import { Avatar as AvatarPrimitive } from 'radix-ui'
 
 import * as React from 'react'
 
-function Avatar({
+function AvatarRoot({
   className,
   size = 'default',
   ...props
@@ -22,6 +22,66 @@ function Avatar({
       )}
       {...props}
     />
+  )
+}
+
+function getDefaultFallback(name?: string, alt?: string) {
+  const text = name?.trim() || alt?.trim() || ''
+  if (!text)
+    return '?'
+
+  const words = text.split(/\s+/).filter(Boolean)
+  if (words.length >= 2) {
+    return words
+      .slice(0, 2)
+      .map(word => word[0]!)
+      .join('')
+      .toUpperCase()
+  }
+
+  return Array.from(text).slice(0, 2).join('').toUpperCase()
+}
+
+export interface AvatarProps extends Omit<React.ComponentProps<typeof AvatarRoot>, 'children'> {
+  src?: string | null
+  alt?: string
+  name?: string
+  fallback?: React.ReactNode
+  imageClassName?: string
+  fallbackClassName?: string
+  fallbackDelayMs?: number
+}
+
+function Avatar({
+  src,
+  alt,
+  name,
+  fallback,
+  className,
+  imageClassName,
+  fallbackClassName,
+  fallbackDelayMs,
+  ...props
+}: AvatarProps) {
+  const normalizedSrc = src?.trim() || undefined
+  const fallbackContent = fallback ?? getDefaultFallback(name, alt)
+
+  return (
+    <AvatarRoot className={className} {...props}>
+      {normalizedSrc && (
+        <AvatarImage
+          src={normalizedSrc}
+          alt={alt ?? name ?? 'avatar'}
+          className={cn(imageClassName)}
+        />
+      )}
+      <AvatarFallback
+        delayMs={fallbackDelayMs}
+        className={cn(fallbackClassName)}
+      >
+        {fallbackContent}
+      </AvatarFallback>
+    </AvatarRoot>
   )
 }
 
@@ -109,4 +169,5 @@ export {
   AvatarGroup,
   AvatarGroupCount,
   AvatarImage,
+  AvatarRoot,
 }
