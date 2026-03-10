@@ -13,6 +13,12 @@ const nextConfig = {
     externalDir: true,
   },
   transpilePackages: ['@propet/ui'],
+  images: {
+    remotePatterns: [
+      { hostname: 'loremflickr.com' },
+      { hostname: 'i.pravatar.cc' },
+    ],
+  },
 }
 
 export default nextConfig

@@ -1,0 +1,15 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="petAvatarBg" x1="18" y1="12" x2="114" y2="118" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B8C7FF" />
+      <stop offset="1" stop-color="#8EA6FF" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="64" fill="url(#petAvatarBg)" />
+  <circle cx="64" cy="76" r="27" fill="#F5F8FF" />
+  <ellipse cx="47" cy="52" rx="8" ry="11" fill="#F5F8FF" />
+  <ellipse cx="81" cy="52" rx="8" ry="11" fill="#F5F8FF" />
+  <circle cx="57" cy="76" r="5.5" fill="#8EA6FF" />
+  <circle cx="71" cy="76" r="5.5" fill="#8EA6FF" />
+  <circle cx="64" cy="68" r="6" fill="#8EA6FF" />
+</svg>
