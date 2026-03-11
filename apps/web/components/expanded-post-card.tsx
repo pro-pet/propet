@@ -2,7 +2,7 @@
 
 import { Add01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Avatar, Button } from '@propet/ui'
+import { Avatar, Button, cn } from '@propet/ui'
 import { motion } from 'motion/react'
 import { getPostLayoutIds } from '@/components/post-card'
 import { PostComment } from '@/components/post-comment'
@@ -62,17 +62,19 @@ export function ExpandedPostCard({
           <div className="grid h-full w-full md:grid-cols-[1.1fr_1fr]">
             <motion.div
               layoutId={layoutIds.cover}
-              className={`relative z-30 min-h-[280px] md:min-h-full ${post.coverImage ? 'bg-muted' : post.coverClassName ?? 'bg-background'}`}
+              className={cn(
+                'relative z-30 min-h-[280px] md:min-h-full',
+                post.coverImage ? 'bg-secondary' : post.coverClassName ?? 'bg-background',
+              )}
               style={post.coverImage
                 ? {
                     backgroundImage: `url(${post.coverImage})`,
                     backgroundPosition: 'center',
-                    backgroundSize: 'cover',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
                   }
                 : undefined}
-            >
-              <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent" />
-            </motion.div>
+            />
 
             <div className="relative min-h-0">
               <div className="pointer-events-none absolute inset-x-0 top-0 z-20">
