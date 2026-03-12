@@ -4,6 +4,7 @@ import { FavouriteIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, Button, cn } from '@propet/ui'
 import { motion } from 'motion/react'
+import Image from 'next/image'
 
 export interface PostCardProps {
   id: string
@@ -55,15 +56,18 @@ export function PostCard({
         <motion.div
           layoutId={layoutIds.cover}
           className={`relative overflow-hidden rounded-lg ${coverImage ? 'bg-muted' : coverClassName ?? 'bg-background'}`}
-          style={coverImage
-            ? {
-                height: coverHeight,
-                backgroundImage: `url(${coverImage})`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-              }
-            : { height: coverHeight }}
+          style={{ height: coverHeight }}
         >
+          {coverImage && (
+            <Image
+              src={coverImage}
+              alt={title}
+              fill
+              unoptimized
+              className="object-cover"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            />
+          )}
           <div className="absolute inset-0 bg-linear-to-t from-primary/10 via-transparent to-transparent" />
           {badge
             && (

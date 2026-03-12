@@ -4,6 +4,7 @@ import { Add01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, Button, cn } from '@propet/ui'
 import { motion } from 'motion/react'
+import Image from 'next/image'
 import { getPostLayoutIds } from '@/components/post-card'
 import { PostComment } from '@/components/post-comment'
 import { PostEngagementBar } from '@/components/post-engagement-bar'
@@ -66,15 +67,18 @@ export function ExpandedPostCard({
                 'relative z-30 min-h-[280px] md:min-h-full',
                 post.coverImage ? 'bg-secondary' : post.coverClassName ?? 'bg-background',
               )}
-              style={post.coverImage
-                ? {
-                    backgroundImage: `url(${post.coverImage})`,
-                    backgroundPosition: 'center',
-                    backgroundSize: 'contain',
-                    backgroundRepeat: 'no-repeat',
-                  }
-                : undefined}
-            />
+            >
+              {post.coverImage && (
+                <Image
+                  src={post.coverImage}
+                  alt={post.title}
+                  fill
+                  unoptimized
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 55vw"
+                />
+              )}
+            </motion.div>
 
             <div className="relative min-h-0">
               <div className="pointer-events-none absolute inset-x-0 top-0 z-20">

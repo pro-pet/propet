@@ -2,5 +2,10 @@ import { createConfig } from './base.js'
 
 export const config = createConfig(
   { react: true },
-  { rules: { 'react-refresh/only-export-components': 'off' } },
+  {
+    rules: {
+      'react-refresh/only-export-components': 'off',
+      'react/no-unstable-default-props': 'off',
+    },
+  },
 )
