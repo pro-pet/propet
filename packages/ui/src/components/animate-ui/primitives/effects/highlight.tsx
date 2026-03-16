@@ -138,6 +138,7 @@ function Highlight<T extends React.ElementType = 'div'>({
   } = props
 
   const localRef = React.useRef<HTMLDivElement>(null)
+  
   React.useImperativeHandle(ref, () => localRef.current as HTMLDivElement)
 
   const propsBoundsOffset = (props as ParentModeHighlightProps)?.boundsOffset

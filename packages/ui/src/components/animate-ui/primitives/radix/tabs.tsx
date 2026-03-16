@@ -7,7 +7,7 @@ import type { HTMLMotionProps, Transition } from 'motion/react'
 import { AutoHeight } from '@propet/ui/components/animate-ui/primitives/effects/auto-height'
 import { Highlight, HighlightItem } from '@propet/ui/components/animate-ui/primitives/effects/highlight'
 import { useControlledState } from '@propet/ui/hooks/use-controlled-state'
-import { getStrictContext } from '@propet/ui/lib/get-strict-context'
+import { createStrictContext } from '@ui/lib/create-strict-context'
 import { AnimatePresence, motion } from 'motion/react'
 import { Tabs as TabsPrimitive } from 'radix-ui'
 import * as React from 'react'
@@ -17,7 +17,7 @@ interface TabsContextType {
   setValue: TabsProps['onValueChange']
 }
 
-const [TabsProvider, useTabs] = getStrictContext<TabsContextType>('TabsContext')
+const [TabsProvider, useTabs] = createStrictContext<TabsContextType>('TabsContext')
 
 type TabsProps = React.ComponentProps<typeof TabsPrimitive.Root>
 
@@ -79,8 +79,7 @@ function TabsTrigger(props: TabsTriggerProps) {
   return <TabsPrimitive.Trigger data-slot="tabs-trigger" {...props} />
 }
 
-type TabsContentProps = React.ComponentProps<typeof TabsPrimitive.Content>
-  & HTMLMotionProps<'div'>
+type TabsContentProps = React.ComponentProps<typeof TabsPrimitive.Content> & HTMLMotionProps<'div'>
 
 function TabsContent({
   value,

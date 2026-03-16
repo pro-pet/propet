@@ -7,9 +7,9 @@
     ".": "./src/index.ts",
     "./globals.css": "./src/styles/globals.css",
     "./postcss.config": "./postcss.config.mjs",
-    "./lib/*": "./src/lib/*.ts",
-    "./components/*": "./src/components/*.tsx",
-    "./hooks/*": "./src/hooks/*.ts"
+    "./lib/*": "./src/lib/*",
+    "./components/*": "./src/components/*",
+    "./hooks/*": "./src/hooks/*"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0"

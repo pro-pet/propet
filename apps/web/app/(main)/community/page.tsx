@@ -2,7 +2,7 @@
 
 import { Add01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Button } from '@propet/ui'
+import { Button, Tabs, TabsList, TabsTrigger } from '@propet/ui'
 import { WaterfallFeed } from '@/components/waterfall-feed'
 
 const communityTags = ['萌宠日常', '宠物穿搭', '健康养护', '洗护测评', '领养故事', '周末探店']
@@ -85,14 +85,12 @@ export default function CommunityPage() {
       <header className="bg-background/85 sticky top-0 z-40 backdrop-blur-lg">
         <div className="mx-auto max-w-5xl px-4 pt-3 pb-3 sm:px-6">
           <div className="mb-3 flex items-center justify-between">
-            <div className="bg-muted inline-flex rounded-full p-1">
-              <button className="bg-background min-w-20 rounded-full px-4 py-1.5 text-sm font-medium shadow-sm">
-                推荐
-              </button>
-              <button className="text-muted-foreground hover:text-foreground min-w-20 rounded-full px-4 py-1.5 text-sm font-medium transition-colors">
-                关注
-              </button>
-            </div>
+            <Tabs defaultValue="recommend">
+              <TabsList>
+                <TabsTrigger value="recommend">推荐</TabsTrigger>
+                <TabsTrigger value="follow">关注</TabsTrigger>
+              </TabsList>
+            </Tabs>
 
             <Button variant="ghost" size="icon" className="rounded-full">
               <HugeiconsIcon icon={Add01Icon} size={20} />
