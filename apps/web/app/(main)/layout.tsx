@@ -31,11 +31,7 @@ export default function MainLayout({
         opacity={1}
         zIndex={10}
       />
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-200 flex justify-center pb-6">
-        <div className="pointer-events-auto">
-          <MainDock />
-        </div>
-      </div>
+      <MainDock />
     </div>
   )
 }

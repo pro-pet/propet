@@ -2,6 +2,7 @@
 
 import type { DockItem } from '@/components/dock'
 import { AddCircleIcon, AiMagicIcon, Home11Icon, Mail01Icon, ShoppingBag01Icon, UserIcon } from '@hugeicons/core-free-icons'
+import { motion } from 'motion/react'
 import { useMemo } from 'react'
 import { useAuth } from '@/components/auth-provider'
 import { Dock } from '@/components/dock'
@@ -26,5 +27,14 @@ export function MainDock() {
     },
   ], [user])
 
-  return <Dock items={items} />
+  return (
+    <motion.div
+      layoutRoot
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-200 flex justify-center pb-6"
+    >
+      <div className="pointer-events-auto">
+        <Dock items={items} />
+      </div>
+    </motion.div>
+  )
 }
