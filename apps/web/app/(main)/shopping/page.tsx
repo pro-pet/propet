@@ -1,11 +1,13 @@
 'use client'
 
+import { PageSearch } from '@/components/page-search'
+
 export default function ShoppingPage() {
   return (
     <div className="flex min-h-svh flex-col">
-      <header className="bg-background/80 sticky top-0 z-40 backdrop-blur-lg">
-        <div className="mx-auto flex h-14 w-full max-w-5xl items-center px-6">
-          <h1 className="text-xl font-semibold">购物</h1>
+      <header className="sticky top-0 z-[120]">
+        <div className="mx-auto flex h-24 w-full max-w-5xl items-center px-6">
+          <PageSearch />
         </div>
       </header>
 

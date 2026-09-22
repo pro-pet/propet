@@ -1,20 +1,15 @@
 'use client'
 
-import {
-  Copy01Icon,
-  GridIcon,
-  Settings01Icon,
-  Tick02Icon,
-} from '@hugeicons/core-free-icons'
+import { Bookmark01Icon, Copy01Icon, GridIcon, HeartCheckIcon, Settings01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, Button } from '@propet/ui'
 import { motion } from 'motion/react'
 import Link from 'next/link'
 import { useCallback, useState } from 'react'
+import { PageSearch } from '@/components/page-search'
 import { WaterfallFeed } from '@/components/waterfall-feed'
 
 const UID = 'PP-83927461'
-
 const mockUser = {
   name: '团子麻麻',
   avatar: 'https://i.pravatar.cc/200?u=propet-me',
@@ -23,9 +18,7 @@ const mockUser = {
   following: 526,
   posts: 47,
 }
-
 const petPic = (tag: string, lock: number) => `https://loremflickr.com/720/1080/${tag}?lock=${lock}`
-
 const mockPosts = [
   { id: 'p1', title: '今天带团子去公园啦', author: '团子麻麻', likes: '1.2k', coverHeight: 210, coverImage: petPic('dog', 301) },
   { id: 'p2', title: '奶盖的新衣服', author: '团子麻麻', likes: '846', coverHeight: 280, coverImage: petPic('cat', 302) },
@@ -45,7 +38,6 @@ function formatCount(n: number) {
 
 export default function MinePage() {
   const [copied, setCopied] = useState(false)
-
   const copyUid = useCallback(() => {
     navigator.clipboard.writeText(UID).then(() => {
       setCopied(true)
@@ -54,100 +46,78 @@ export default function MinePage() {
   }, [])
 
   return (
-    <div className="flex flex-col">
-      <div className="mx-auto w-full max-w-5xl px-5">
-        {/* Profile header */}
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="flex gap-5 pt-6 pb-5"
-        >
-          <div className="relative shrink-0 self-center">
-            <div className="from-primary/50 via-primary/20 to-primary/50 rounded-full bg-gradient-to-br p-[3px]">
-              <Avatar
-                src={mockUser.avatar}
-                name={mockUser.name}
-                className="size-[86px] ring-[3px] ring-background"
-              />
+    <div className="bg-background min-h-svh">
+      <div className="mx-auto w-full max-w-5xl px-5 sm:px-8">
+        <header className="sticky top-0 z-[120] flex h-24 items-center">
+          <PageSearch />
+        </header>
+
+        <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: 'easeOut' }} className="pt-7 pb-5">
+          <div className="flex items-start gap-4 sm:gap-6">
+            <Avatar src={mockUser.avatar} name={mockUser.name} className="ring-primary/20 size-[82px] ring-4 sm:size-24" />
+            <div className="min-w-0 flex-1">
+              <h1 className="truncate text-xl font-bold tracking-tight sm:text-2xl">{mockUser.name}</h1>
+              <button onClick={copyUid} className="text-muted-foreground mt-1 inline-flex items-center gap-1 text-xs tabular-nums transition-colors hover:text-foreground">
+                {UID}
+                <HugeiconsIcon icon={copied ? Tick02Icon : Copy01Icon} size={12} className={copied ? 'text-primary' : ''} />
+              </button>
+              <p className="text-muted-foreground mt-2 max-w-lg text-sm leading-relaxed">{mockUser.bio}</p>
             </div>
           </div>
-
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center justify-between">
-              <h1 className="truncate text-xl font-bold tracking-tight">{mockUser.name}</h1>
-              <Link href="/settings">
-                <Button variant="ghost" size="icon" className="size-8 rounded-full">
-                  <HugeiconsIcon icon={Settings01Icon} size={18} />
-                </Button>
-              </Link>
-            </div>
-            <button
-              onClick={copyUid}
-              className="mt-0.5 inline-flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <span className="text-xs tabular-nums">{UID}</span>
-              <HugeiconsIcon
-                icon={copied ? Tick02Icon : Copy01Icon}
-                size={12}
-                className={copied ? 'text-primary' : ''}
-              />
-            </button>
-
-            <div className="mt-2 flex items-center gap-3">
-              <span className="text-sm">
-                <span className="font-bold tabular-nums">{formatCount(mockUser.posts)}</span>
-                <span className="text-muted-foreground ml-0.5">帖子</span>
-              </span>
-              <span className="text-sm">
-                <span className="font-bold tabular-nums">{formatCount(mockUser.followers)}</span>
-                <span className="text-muted-foreground ml-0.5">粉丝</span>
-              </span>
-              <span className="text-sm">
-                <span className="font-bold tabular-nums">{formatCount(mockUser.following)}</span>
-                <span className="text-muted-foreground ml-0.5">关注</span>
-              </span>
-            </div>
-
-            <p className="mt-2 text-sm leading-relaxed">{mockUser.bio}</p>
+          <div className="bg-muted/50 mt-5 grid grid-cols-3 divide-x divide-border rounded-2xl py-3 text-center">
+            <span>
+              <strong className="block text-base">
+                {formatCount(mockUser.posts)}
+              </strong>
+              <small className="text-muted-foreground text-xs">笔记</small>
+            </span>
+            <span>
+              <strong className="block text-base">
+                {formatCount(mockUser.followers)}
+              </strong>
+              <small className="text-muted-foreground text-xs">粉丝</small>
+            </span>
+            <span>
+              <strong className="block text-base">
+                {formatCount(mockUser.following)}
+              </strong>
+              <small className="text-muted-foreground text-xs">关注</small>
+            </span>
           </div>
         </motion.section>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.15, duration: 0.3 }}
-          className="flex gap-2 pb-6"
-        >
-          <Button
-            variant="secondary"
-            className="h-9 flex-1 rounded-full text-sm font-medium"
-          >
-            编辑资料
-          </Button>
-          <Button
-            variant="secondary"
-            className="h-9 flex-1 rounded-full text-sm font-medium"
-          >
-            分享主页
-          </Button>
+        <div className="flex justify-end pb-3">
+          <Link href="/settings">
+            <Button variant="ghost" size="icon" className="size-9 rounded-full">
+              <HugeiconsIcon icon={Settings01Icon} size={19} />
+              <span className="sr-only">设置</span>
+            </Button>
+          </Link>
+        </div>
+
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15, duration: 0.3 }} className="flex gap-2 pb-5">
+          <Button className="h-10 flex-1 rounded-full text-sm font-semibold">编辑资料</Button>
+          <Button variant="outline" className="h-10 flex-1 rounded-full text-sm font-semibold">分享主页</Button>
         </motion.div>
 
-        <div className="my-5 h-px bg-border/60" />
-
-        <div className="flex items-center justify-center gap-8 pb-4">
-          <div className="inline-flex items-center gap-1.5 pb-1 text-sm font-medium text-foreground border-b-2 border-foreground">
-            <HugeiconsIcon icon={GridIcon} size={16} />
-            帖子
+        <div className="border-y border-border/60">
+          <div className="grid grid-cols-3">
+            <button className="relative flex h-12 items-center justify-center gap-1.5 text-sm font-semibold after:absolute after:bottom-0 after:h-0.5 after:w-8 after:rounded-full after:bg-primary">
+              <HugeiconsIcon icon={GridIcon} size={16} />
+              笔记
+            </button>
+            <button className="text-muted-foreground hover:text-foreground flex h-12 items-center justify-center gap-1.5 text-sm">
+              <HugeiconsIcon icon={Bookmark01Icon} size={16} />
+              收藏
+            </button>
+            <button className="text-muted-foreground hover:text-foreground flex h-12 items-center justify-center gap-1.5 text-sm">
+              <HugeiconsIcon icon={HeartCheckIcon} size={16} />
+              喜欢
+            </button>
           </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="pb-28"
-        >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="pb-28 pt-5">
           <WaterfallFeed posts={mockPosts} />
         </motion.div>
       </div>

@@ -15,6 +15,7 @@ const DEFAULT_DOCK_GAP = 8
 const DEFAULT_ACTIVE_EXTRA_WIDTH = 0
 const DEFAULT_BADGE_MAX = 99
 const dockTransition = { duration: 0.22 } as const
+export const DOCK_SURFACE_CLASS = 'bg-background/80 backdrop-blur-sm relative flex items-center rounded-full p-1.5 shadow-2xl'
 
 export interface DockItem {
   href: string
@@ -70,7 +71,7 @@ export function Dock({
   return (
     <LayoutGroup id="dock">
       <nav
-        className="bg-background/80 backdrop-blur-sm relative flex items-center rounded-full p-1.5 shadow-2xl"
+        className={`${DOCK_SURFACE_CLASS} max-w-[calc(100vw-1rem)]`}
         style={{ gap: dockGap }}
       >
         <div aria-hidden className="pointer-events-none absolute opacity-0">
@@ -104,8 +105,9 @@ export function Dock({
               key={tab.href}
               href={tab.href}
               aria-label={tab.label}
+              title={tab.label}
               onClick={isActive ? e => e.preventDefault() : undefined}
-              className="relative z-10"
+              className="relative z-10 min-w-0"
             >
               <motion.div
                 initial={false}
@@ -113,7 +115,7 @@ export function Dock({
                   width: isActive ? getExpandedWidth(i) : itemWidth,
                 }}
                 transition={dockTransition}
-                className={`relative flex items-center justify-center rounded-full transition-colors duration-200 ${
+                className={`relative flex max-w-full items-center justify-center rounded-full transition-colors duration-200 ${
                   isActive
                     ? 'text-primary-foreground'
                     : 'text-primary'
@@ -162,7 +164,7 @@ export function Dock({
                     initial={false}
                     animate={{ width: isActive ? labelGap : 0 }}
                     transition={dockTransition}
-                    className="block shrink-0"
+                    className="hidden shrink-0 sm:block"
                   />
                   <motion.span
                     initial={false}
@@ -171,7 +173,7 @@ export function Dock({
                       opacity: isActive ? 1 : 0,
                     }}
                     transition={dockTransition}
-                    className="inline-block overflow-hidden text-sm font-medium whitespace-nowrap text-primary-foreground"
+                    className="hidden overflow-hidden text-sm font-medium whitespace-nowrap text-primary-foreground sm:inline-block"
                   >
                     {tab.label}
                   </motion.span>
