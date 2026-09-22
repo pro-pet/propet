@@ -1,11 +1,12 @@
 'use client'
 
-import { Bookmark01Icon, Copy01Icon, GridIcon, HeartCheckIcon, Settings01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
+import { Copy01Icon, Edit02Icon, MoreHorizontalIcon, Settings01Icon, Share08Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, Button } from '@propet/ui'
-import { motion } from 'motion/react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@propet/ui/components/dropdown-menu'
 import Link from 'next/link'
 import { useCallback, useState } from 'react'
+import { useAuth } from '@/components/auth-provider'
 import { PageSearch } from '@/components/page-search'
 import { WaterfallFeed } from '@/components/waterfall-feed'
 
@@ -37,89 +38,117 @@ function formatCount(n: number) {
 }
 
 export default function MinePage() {
+  const { user } = useAuth()
+  const profileId = user?.id ?? UID
+  const profileName = user ? user.name || '用户' : mockUser.name
+  const profileAvatar = user ? user.avatar : mockUser.avatar
   const [copied, setCopied] = useState(false)
+  const [activeTab, setActiveTab] = useState('笔记')
   const copyUid = useCallback(() => {
-    navigator.clipboard.writeText(UID).then(() => {
+    navigator.clipboard.writeText(profileId).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
     })
-  }, [])
+  }, [profileId])
 
   return (
     <div className="bg-background min-h-svh">
-      <div className="mx-auto w-full max-w-5xl px-5 sm:px-8">
+      <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <header className="sticky top-0 z-[120] flex h-24 items-center">
           <PageSearch />
         </header>
 
-        <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: 'easeOut' }} className="pt-7 pb-5">
-          <div className="flex items-start gap-4 sm:gap-6">
-            <Avatar src={mockUser.avatar} name={mockUser.name} className="ring-primary/20 size-[82px] ring-4 sm:size-24" />
-            <div className="min-w-0 flex-1">
-              <h1 className="truncate text-xl font-bold tracking-tight sm:text-2xl">{mockUser.name}</h1>
-              <button onClick={copyUid} className="text-muted-foreground mt-1 inline-flex items-center gap-1 text-xs tabular-nums transition-colors hover:text-foreground">
-                {UID}
-                <HugeiconsIcon icon={copied ? Tick02Icon : Copy01Icon} size={12} className={copied ? 'text-primary' : ''} />
+        <section
+          className="relative mx-auto max-w-3xl py-10 sm:py-14"
+        >
+          <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-8">
+            <Avatar
+              key={profileAvatar ?? profileName}
+              src={profileAvatar}
+              name={profileName}
+              className="size-28 after:border-0 sm:size-32"
+            />
+            <div className="flex min-w-0 flex-col items-center sm:items-start">
+              <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{profileName}</h1>
+              <button
+                onClick={copyUid}
+                className="text-muted-foreground mt-1 inline-flex items-center gap-1 text-xs tabular-nums transition-colors hover:text-foreground"
+              >
+                {profileId}
+                <HugeiconsIcon
+                  icon={copied ? Tick02Icon : Copy01Icon}
+                  size={12}
+                  className={copied ? 'text-primary' : ''}
+                />
               </button>
-              <p className="text-muted-foreground mt-2 max-w-lg text-sm leading-relaxed">{mockUser.bio}</p>
+              <p className="text-muted-foreground mt-3 max-w-md text-center text-sm leading-relaxed sm:text-left">
+                {mockUser.bio}
+              </p>
+              <div className="mt-5 flex items-center gap-7">
+                <span className="text-center">
+                  <strong className="block text-base">{formatCount(mockUser.posts)}</strong>
+                  <small className="text-muted-foreground text-xs">笔记</small>
+                </span>
+                <span className="text-center">
+                  <strong className="block text-base">{formatCount(mockUser.followers)}</strong>
+                  <small className="text-muted-foreground text-xs">粉丝</small>
+                </span>
+                <span className="text-center">
+                  <strong className="block text-base">{formatCount(mockUser.following)}</strong>
+                  <small className="text-muted-foreground text-xs">关注</small>
+                </span>
+              </div>
             </div>
           </div>
-          <div className="bg-muted/50 mt-5 grid grid-cols-3 divide-x divide-border rounded-2xl py-3 text-center">
-            <span>
-              <strong className="block text-base">
-                {formatCount(mockUser.posts)}
-              </strong>
-              <small className="text-muted-foreground text-xs">笔记</small>
-            </span>
-            <span>
-              <strong className="block text-base">
-                {formatCount(mockUser.followers)}
-              </strong>
-              <small className="text-muted-foreground text-xs">粉丝</small>
-            </span>
-            <span>
-              <strong className="block text-base">
-                {formatCount(mockUser.following)}
-              </strong>
-              <small className="text-muted-foreground text-xs">关注</small>
-            </span>
+
+          <div className="absolute top-6 right-0">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon-lg" className="rounded-full" aria-label="更多" title="更多">
+                  <HugeiconsIcon icon={MoreHorizontalIcon} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={8}>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <HugeiconsIcon icon={Edit02Icon} />
+                    编辑资料
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <HugeiconsIcon icon={Share08Icon} />
+                    分享主页
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings">
+                      <HugeiconsIcon icon={Settings01Icon} />
+                      设置
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-        </motion.section>
+        </section>
 
-        <div className="flex justify-end pb-3">
-          <Link href="/settings">
-            <Button variant="ghost" size="icon" className="size-9 rounded-full">
-              <HugeiconsIcon icon={Settings01Icon} size={19} />
-              <span className="sr-only">设置</span>
-            </Button>
-          </Link>
-        </div>
-
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15, duration: 0.3 }} className="flex gap-2 pb-5">
-          <Button className="h-10 flex-1 rounded-full text-sm font-semibold">编辑资料</Button>
-          <Button variant="outline" className="h-10 flex-1 rounded-full text-sm font-semibold">分享主页</Button>
-        </motion.div>
-
-        <div className="border-y border-border/60">
-          <div className="grid grid-cols-3">
-            <button className="relative flex h-12 items-center justify-center gap-1.5 text-sm font-semibold after:absolute after:bottom-0 after:h-0.5 after:w-8 after:rounded-full after:bg-primary">
-              <HugeiconsIcon icon={GridIcon} size={16} />
-              笔记
-            </button>
-            <button className="text-muted-foreground hover:text-foreground flex h-12 items-center justify-center gap-1.5 text-sm">
-              <HugeiconsIcon icon={Bookmark01Icon} size={16} />
-              收藏
-            </button>
-            <button className="text-muted-foreground hover:text-foreground flex h-12 items-center justify-center gap-1.5 text-sm">
-              <HugeiconsIcon icon={HeartCheckIcon} size={16} />
-              喜欢
-            </button>
+        <div>
+          <div className="flex items-center justify-center gap-1 pb-3">
+            {['笔记', '收藏', '喜欢'].map(tab => (
+              <button
+                key={tab}
+                type="button"
+                aria-pressed={activeTab === tab}
+                onClick={() => setActiveTab(tab)}
+                className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${activeTab === tab ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
         </div>
 
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="pb-28 pt-5">
+        <div className="pb-28 pt-6">
           <WaterfallFeed posts={mockPosts} />
-        </motion.div>
+        </div>
       </div>
     </div>
   )

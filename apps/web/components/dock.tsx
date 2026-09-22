@@ -2,6 +2,7 @@
 
 import type { IconSvgElement } from '@hugeicons/react'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { Avatar } from '@propet/ui'
 import { LayoutGroup, motion } from 'motion/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -21,6 +22,10 @@ export interface DockItem {
   href: string
   label: string
   icon: IconSvgElement
+  avatar?: {
+    src: string | null
+    name: string
+  }
   badge?: boolean | number
 }
 
@@ -138,10 +143,21 @@ export function Dock({
 
                 <div className="relative z-10 flex items-center">
                   <div className="relative shrink-0">
-                    <HugeiconsIcon
-                      icon={tab.icon}
-                      size={iconSize}
-                    />
+                    {tab.avatar
+                      ? (
+                          <Avatar
+                            key={tab.avatar.src ?? tab.avatar.name}
+                            src={tab.avatar.src}
+                            name={tab.avatar.name}
+                            className="border-primary outline-background size-8 border-2 outline-2 after:border-0"
+                          />
+                        )
+                      : (
+                          <HugeiconsIcon
+                            icon={tab.icon}
+                            size={iconSize}
+                          />
+                        )}
                     {hasBadge
                       ? (
                           <span

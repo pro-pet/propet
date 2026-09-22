@@ -1,23 +1,5 @@
-import type { DockItem } from '@/components/dock'
-import {
-  AddCircleIcon,
-  AiMagicIcon,
-  Home11Icon,
-  Mail01Icon,
-  ShoppingBag01Icon,
-  UserIcon,
-} from '@hugeicons/core-free-icons'
-import { Dock } from '@/components/dock'
 import GradualBlur from '@/components/gradual-blur'
-
-const items: DockItem[] = [
-  { href: '/community', label: '社区', icon: Home11Icon },
-  { href: '/publish', label: '发布', icon: AddCircleIcon },
-  { href: '/ai', label: 'AI 助手', icon: AiMagicIcon },
-  { href: '/shopping', label: '购物', icon: ShoppingBag01Icon },
-  { href: '/message', label: '消息', icon: Mail01Icon, badge: 103 },
-  { href: '/mine', label: '我的', icon: UserIcon },
-]
+import { MainDock } from '@/components/main-dock'
 
 export default function MainLayout({
   children,
@@ -51,7 +33,7 @@ export default function MainLayout({
       />
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-200 flex justify-center pb-6">
         <div className="pointer-events-auto">
-          <Dock items={items} />
+          <MainDock />
         </div>
       </div>
     </div>
