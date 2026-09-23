@@ -23,8 +23,8 @@ export function ChatComposer({ recipientName, onSend }: ChatComposerProps) {
   }
 
   return (
-    <div className="bg-background shrink-0 border-t border-border px-4 pb-4 pt-3 sm:px-6 sm:pb-5">
-      <div className="mx-auto max-w-2xl">
+    <div className="border-border/70 bg-background/70 supports-backdrop-filter:bg-background/55 pointer-events-none absolute inset-x-0 bottom-0 z-20 shrink-0 border-t px-4 pt-3 pb-4 backdrop-blur-xl sm:px-6 sm:pb-5">
+      <div className="pointer-events-auto mx-auto max-w-2xl">
         <div className="focus-within:border-ring focus-within:ring-ring/30 flex items-end gap-2 rounded-full border border-border bg-card p-2 focus-within:ring-2">
           <div className="flex items-center">
             <IconButton icon={Image01Icon} label="添加图片" />

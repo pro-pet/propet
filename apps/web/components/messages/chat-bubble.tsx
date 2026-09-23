@@ -20,7 +20,7 @@ export function ChatBubble({ message, avatar, name }: ChatBubbleProps) {
       isReply={isMine}
       avatarSrc={avatar}
       showAuthor={false}
-      bubbleClassName={`inline-block max-w-[78%] rounded-2xl px-4 py-2.5 text-sm leading-6 ${isMine ? 'rounded-tr-none bg-primary text-primary-foreground' : 'rounded-tl-none bg-muted text-foreground'}`}
+      bubbleClassName={`inline-block max-w-[78%] wrap-anywhere rounded-2xl px-4 py-2.5 text-sm leading-6 ${isMine ? 'rounded-tr-none bg-primary text-primary-foreground' : 'rounded-tl-none bg-muted text-foreground'}`}
       meta={isMine && message.read ? <HugeiconsIcon icon={CheckmarkCircle02Icon} size={12} className="text-primary" /> : undefined}
     />
   )
