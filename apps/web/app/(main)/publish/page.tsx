@@ -2,7 +2,7 @@
 
 import { SentIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Button, Input } from '@propet/ui'
+import { Button, Input, Textarea } from '@propet/ui'
 import { PageSearch } from '@/components/page-search'
 
 export default function PublishPage() {
@@ -15,11 +15,11 @@ export default function PublishPage() {
       </header>
       <main className="mx-auto max-w-2xl px-5 pb-28 pt-6">
         <div className="space-y-4">
-          <Input placeholder="给笔记起个标题吧" className="h-12 rounded-none border-0 border-b border-border bg-transparent px-0 text-lg font-semibold shadow-none focus-visible:ring-0" />
-          <textarea placeholder="分享你和毛孩子的故事..." className="text-foreground min-h-52 w-full resize-none border-0 bg-transparent text-sm leading-7 outline-none" />
+          <Input placeholder="标题" className="h-12" />
+          <Textarea placeholder="分享你的故事..." aria-label="分享内容" className="min-h-52 resize-none" />
           <div className="flex justify-end">
-            <Button size="lg" className="rounded-full">
-              <HugeiconsIcon icon={SentIcon} size={16} />
+            <Button className="rounded-full h-12 px-4 gap-2">
+              <HugeiconsIcon icon={SentIcon} />
               发布
             </Button>
           </div>
