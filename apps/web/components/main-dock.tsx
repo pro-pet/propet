@@ -10,7 +10,7 @@ import { Dock } from '@/components/dock'
 const mainItems: DockItem[] = [
   { href: '/community', label: '社区', icon: Home11Icon },
   { href: '/publish', label: '发布', icon: SentIcon },
-  { href: '/ai', label: 'AI 助手', icon: AiMagicIcon },
+  { href: '/ai', label: 'AI 助手', icon: AiMagicIcon, disabled: true },
   { href: '/shopping', label: '购物', icon: ShoppingBag01Icon },
   { href: '/notification', label: '通知', icon: Notification01Icon, badge: 7 },
   { href: '/message', label: '消息', icon: Mail01Icon, badge: 103 },

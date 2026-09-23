@@ -34,6 +34,7 @@ export interface DockItem {
   href: string
   label: string
   icon: IconSvgElement
+  disabled?: boolean
   avatar?: {
     src: string | null
     name: string
@@ -63,7 +64,7 @@ export function Dock({
   badgeMax = DEFAULT_BADGE_MAX,
 }: DockProps) {
   const pathname = usePathname()
-  const activeIndex = items.findIndex(tab => pathname.startsWith(tab.href))
+  const activeIndex = items.findIndex(tab => !tab.disabled && pathname.startsWith(tab.href))
   const labelRefs = useRef<(HTMLSpanElement | null)[]>([])
   const [labelWidths, setLabelWidths] = useState<number[]>([])
   const normalizedBadgeMax = Math.max(0, Math.floor(badgeMax))
@@ -124,6 +125,7 @@ export function Dock({
       </div>
       {items.map((tab, i) => {
         const isActive = i === activeIndex
+        const isDisabled = tab.disabled ?? false
         const labelWidth = labelWidths[i] ?? 0
         const badge = tab.badge
         const hasNumberBadge
@@ -135,84 +137,103 @@ export function Dock({
           : null
         const hasBadge = badge === true || hasNumberBadge
 
-        return (
-          <Link
-            key={tab.href}
-            href={tab.href}
-            aria-label={tab.label}
-            title={tab.label}
-            onClick={isActive ? e => e.preventDefault() : undefined}
-            className="relative z-10 min-w-0 shrink-0"
-          >
-            <motion.div
-              initial={false}
-              animate={{
-                width: isActive ? getExpandedWidth(i) : itemWidth,
-              }}
-              transition={dockTransition}
-              className={`relative flex max-w-full items-center justify-center rounded-full transition-colors duration-200 ${
-                isActive
+        const content = (
+          <motion.div
+            initial={false}
+            animate={{
+              width: isActive ? getExpandedWidth(i) : itemWidth,
+            }}
+            transition={dockTransition}
+            className={`relative flex max-w-full items-center justify-center rounded-full transition-colors duration-200 ${
+              isDisabled
+                ? 'text-muted-foreground opacity-50'
+                : isActive
                   ? 'text-primary-foreground'
                   : 'text-primary'
-              }`}
-              style={{ height: itemHeight }}
-            >
-              <div className="relative z-10 flex items-center">
-                <div className="relative shrink-0">
-                  {tab.avatar
-                    ? (
-                        <Avatar
-                          key={tab.avatar.src ?? tab.avatar.name}
-                          src={tab.avatar.src}
-                          name={tab.avatar.name}
-                          className="border-primary outline-background size-8 border-2 outline-2 after:border-0"
-                        />
-                      )
-                    : (
-                        <HugeiconsIcon
-                          icon={tab.icon}
-                          size={iconSize}
-                        />
-                      )}
-                  {hasBadge
-                    ? (
-                        <span
-                          className="absolute top-0 right-0 z-20 flex translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-red-500 text-[10px] leading-none font-semibold text-white"
-                          style={hasNumberBadge
-                            ? {
-                                minWidth: 16,
-                                height: 16,
-                                paddingInline: 4,
-                              }
-                            : { width: 8, height: 8 }}
-                        >
-                          {numberBadgeLabel}
-                        </span>
-                      )
-                    : null}
-                </div>
-                <motion.span
-                  aria-hidden
-                  initial={false}
-                  animate={{ width: isActive ? labelGap : 0 }}
-                  transition={dockTransition}
-                  className="hidden shrink-0 sm:block"
-                />
-                <motion.span
-                  initial={false}
-                  animate={{
-                    maxWidth: isActive ? labelWidth : 0,
-                    opacity: isActive ? 1 : 0,
-                  }}
-                  transition={labelTransition}
-                  className="hidden shrink-0 overflow-hidden text-sm font-medium whitespace-nowrap text-primary-foreground sm:inline-block"
-                >
-                  {tab.label}
-                </motion.span>
+            }`}
+            style={{ height: itemHeight }}
+          >
+            <div className="relative z-10 flex items-center">
+              <div className="relative shrink-0">
+                {tab.avatar
+                  ? (
+                      <Avatar
+                        key={tab.avatar.src ?? tab.avatar.name}
+                        src={tab.avatar.src}
+                        name={tab.avatar.name}
+                        className="border-primary outline-background size-8 border-2 outline-2 after:border-0"
+                      />
+                    )
+                  : (
+                      <HugeiconsIcon
+                        icon={tab.icon}
+                        size={iconSize}
+                      />
+                    )}
+                {hasBadge
+                  ? (
+                      <span
+                        className="absolute top-0 right-0 z-20 flex translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-red-500 text-[10px] leading-none font-semibold text-white"
+                        style={hasNumberBadge
+                          ? {
+                              minWidth: 16,
+                              height: 16,
+                              paddingInline: 4,
+                            }
+                          : { width: 8, height: 8 }}
+                      >
+                        {numberBadgeLabel}
+                      </span>
+                    )
+                  : null}
               </div>
-            </motion.div>
-          </Link>
+              <motion.span
+                aria-hidden
+                initial={false}
+                animate={{ width: isActive ? labelGap : 0 }}
+                transition={dockTransition}
+                className="hidden shrink-0 sm:block"
+              />
+              <motion.span
+                initial={false}
+                animate={{
+                  maxWidth: isActive ? labelWidth : 0,
+                  opacity: isActive ? 1 : 0,
+                }}
+                transition={labelTransition}
+                className="hidden shrink-0 overflow-hidden text-sm font-medium whitespace-nowrap text-primary-foreground sm:inline-block"
+              >
+                {tab.label}
+              </motion.span>
+            </div>
+          </motion.div>
         )
+
+        return isDisabled
+          ? (
+              <button
+                key={tab.href}
+                type="button"
+                disabled
+                aria-label={`${tab.label}，暂未发布`}
+                title={`${tab.label}（暂未发布）`}
+                className="relative z-10 min-w-0 shrink-0 cursor-not-allowed"
+              >
+                {content}
+              </button>
+            )
+          : (
+              <Link
+                key={tab.href}
+                href={tab.href}
+                aria-label={tab.label}
+                title={tab.label}
+                onClick={isActive ? e => e.preventDefault() : undefined}
+                className="relative z-10 min-w-0 shrink-0"
+              >
+                {content}
+              </Link>
+            )
       })}
     </nav>
   )
