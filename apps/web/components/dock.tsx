@@ -91,7 +91,7 @@ export function Dock({
 
   return (
     <nav
-      className={`${DOCK_SURFACE_CLASS} max-w-[calc(100vw-1rem)]`}
+      className={`${DOCK_SURFACE_CLASS} min-w-0 max-w-[calc(100vw-1rem)] overflow-x-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
       style={{ gap: dockGap }}
     >
       {activeIndex >= 0
@@ -142,7 +142,7 @@ export function Dock({
             aria-label={tab.label}
             title={tab.label}
             onClick={isActive ? e => e.preventDefault() : undefined}
-            className="relative z-10 min-w-0"
+            className="relative z-10 min-w-0 shrink-0"
           >
             <motion.div
               initial={false}
