@@ -33,8 +33,8 @@ export default function AiPage() {
           {suggestions.map(suggestion => <button key={suggestion} onClick={() => setPrompt(suggestion)} className="bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-full px-3.5 py-2 text-xs">{suggestion}</button>)}
         </div>
         {sent && <div className="bg-muted/50 mt-8 rounded-2xl p-4 text-sm leading-6">收到啦！我会结合你的宠物情况，为你整理一份温柔又实用的建议。</div>}
-        <div className="bg-card mt-auto flex items-center gap-2 rounded-2xl border border-border p-2 shadow-sm">
-          <Input value={prompt} onChange={event => setPrompt(event.target.value)} onKeyDown={event => event.key === 'Enter' && submit()} placeholder="向 ProPet AI 提问..." className="h-10 border-0 bg-transparent shadow-none focus-visible:ring-0" />
+        <div className="bg-card mt-auto flex items-center gap-2 rounded-2xl border border-border p-2 shadow-sm transition-colors focus-within:border-primary">
+          <Input value={prompt} onChange={event => setPrompt(event.target.value)} onKeyDown={event => event.key === 'Enter' && submit()} placeholder="向 ProPet AI 提问..." className="h-10 border-0 bg-transparent shadow-none" />
           <Button size="icon" onClick={submit} className="size-10 shrink-0 rounded-xl">
             <HugeiconsIcon icon={ArrowUp02Icon} size={18} />
             <span className="sr-only">发送</span>

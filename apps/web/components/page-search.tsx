@@ -9,16 +9,18 @@ interface PageSearchProps {
 
 export function PageSearch({ placeholder = '搜索宠物灵感' }: PageSearchProps) {
   return (
-    <div className={`${DOCK_SURFACE_CLASS} mx-auto w-full max-w-lg`}>
-      <HugeiconsIcon
-        icon={Search01Icon}
-        size={17}
-        className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2"
-      />
+    <div className={`${DOCK_SURFACE_CLASS} mx-auto w-full max-w-lg border border-transparent transition-colors focus-within:border-primary`}>
+      <div className="size-9 flex justify-center items-center aspect-square rounded-full bg-primary">
+        <HugeiconsIcon
+          icon={Search01Icon}
+          className="text-primary-foreground"
+          size={20}
+        />
+      </div>
       <Input
         aria-label={placeholder}
         placeholder={placeholder}
-        className="h-9 rounded-full border-0 bg-transparent pl-10 text-sm shadow-none focus-visible:ring-0"
+        className="h-9 rounded-full border-0 bg-transparent text-sm shadow-none"
       />
     </div>
   )
