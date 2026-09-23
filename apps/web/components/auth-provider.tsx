@@ -1,7 +1,20 @@
 'use client'
 
 import type { CurrentUser } from '@/lib/current-user'
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { createContext, useCallback, useContext, useMemo } from 'react'
+import { api, ApiError } from '@/lib/http'
+
+const SESSION_QUERY_KEY = ['session'] as const
+
+interface SessionResponse {
+  user: CurrentUser | null
+}
+
+interface SignInResponse {
+  user?: CurrentUser
+  message?: string
+}
 
 interface AuthContextValue {
   user: CurrentUser | null
@@ -12,77 +25,50 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<CurrentUser | null>(null)
-  const refreshController = useRef<AbortController | null>(null)
-  const signingIn = useRef(false)
+  const queryClient = useQueryClient()
+  const sessionQuery = useQuery({
+    queryKey: SESSION_QUERY_KEY,
+    queryFn: async ({ signal }) => {
+      const response = await api.get<SessionResponse>('/api/session', { baseURL: '', signal })
+      return response.user
+    },
+    staleTime: 0,
+  })
 
-  useEffect(() => {
-    const refreshUser = async () => {
-      if (signingIn.current)
-        return
-      refreshController.current?.abort()
-      refreshController.current = new AbortController()
-      const { signal } = refreshController.current
+  const signInMutation = useMutation({
+    mutationFn: async ({ email, password }: { email: string, password: string }) => {
+      const response = await api.post<SignInResponse, { email: string, password: string }>(
+        '/api/session',
+        { email, password },
+        { baseURL: '' },
+      )
+      if (!response.user)
+        throw new ApiError(response.message || '登录失败，请稍后重试')
+      return response.user
+    },
+    onMutate: () => queryClient.cancelQueries({ queryKey: SESSION_QUERY_KEY }),
+    onSuccess: user => queryClient.setQueryData(SESSION_QUERY_KEY, user),
+  })
 
-      try {
-        const response = await fetch('/api/session', { cache: 'no-store', signal })
-        if (!response.ok) {
-          if (!signal.aborted)
-            setUser(null)
-          return
-        }
-        const data = await response.json() as { user: CurrentUser | null }
-        if (!signal.aborted)
-          setUser(data.user)
-      }
-      catch {
-        if (!signal.aborted)
-          setUser(null)
-      }
-    }
-
-    const onVisibilityChange = () => {
-      if (document.visibilityState === 'visible')
-        void refreshUser()
-    }
-
-    void refreshUser()
-    window.addEventListener('focus', refreshUser)
-    document.addEventListener('visibilitychange', onVisibilityChange)
-    return () => {
-      refreshController.current?.abort()
-      window.removeEventListener('focus', refreshUser)
-      document.removeEventListener('visibilitychange', onVisibilityChange)
-    }
-  }, [])
+  const signOutMutation = useMutation({
+    mutationFn: () => api.delete<SessionResponse>('/api/session', { baseURL: '' }),
+    onMutate: () => queryClient.cancelQueries({ queryKey: SESSION_QUERY_KEY }),
+    onSuccess: response => queryClient.setQueryData(SESSION_QUERY_KEY, response.user),
+  })
 
   const signIn = useCallback(async (email: string, password: string) => {
-    signingIn.current = true
-    refreshController.current?.abort()
-    try {
-      const response = await fetch('/api/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
-      const data = await response.json() as { user?: CurrentUser, message?: string }
-      if (!response.ok || !data.user)
-        throw new Error(data.message || '登录失败，请稍后重试')
-      setUser(data.user)
-    }
-    finally {
-      signingIn.current = false
-    }
-  }, [])
+    await signInMutation.mutateAsync({ email, password })
+  }, [signInMutation.mutateAsync])
 
   const signOut = useCallback(async () => {
-    const response = await fetch('/api/session', { method: 'DELETE' })
-    if (!response.ok)
-      throw new Error('退出登录失败，请稍后重试')
-    setUser(null)
-  }, [])
+    await signOutMutation.mutateAsync()
+  }, [signOutMutation.mutateAsync])
 
-  const value = useMemo(() => ({ user, signIn, signOut }), [user, signIn, signOut])
+  const value = useMemo(() => ({
+    user: sessionQuery.data ?? null,
+    signIn,
+    signOut,
+  }), [sessionQuery.data, signIn, signOut])
 
   return <AuthContext value={value}>{children}</AuthContext>
 }

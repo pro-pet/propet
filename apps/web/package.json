@@ -14,8 +14,12 @@
   "dependencies": {
     "@hugeicons/core-free-icons": "catalog:",
     "@hugeicons/react": "catalog:",
+    "@propet/hooks": "workspace:*",
     "@propet/ui": "workspace:*",
+    "@tanstack/react-query": "^5.103.2",
+    "axios": "^1.20.0",
     "dotenv": "^17.2.4",
+    "es-toolkit": "^1.52.0",
     "mathjs": "^15.1.1",
     "motion": "catalog:",
     "next": "16.1.6",
