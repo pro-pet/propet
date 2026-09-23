@@ -1,10 +1,12 @@
 'use client'
 
-import { Copy01Icon, Edit02Icon, MoreHorizontalIcon, Settings01Icon, Share08Icon, Tick02Icon } from '@hugeicons/core-free-icons'
+import { Agreement01Icon, ComputerIcon, Copy01Icon, CustomerService01Icon, Edit02Icon, Logout01Icon, Moon01Icon, MoreHorizontalIcon, Share08Icon, Sun01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, Button } from '@propet/ui'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@propet/ui/components/dropdown-menu'
-import Link from 'next/link'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@propet/ui/components/dialog'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@propet/ui/components/dropdown-menu'
+import { useTheme } from 'next-themes'
+import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { useAuth } from '@/components/auth-provider'
 import { PageSearch } from '@/components/page-search'
@@ -38,18 +40,35 @@ function formatCount(n: number) {
 }
 
 export default function MinePage() {
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
+  const router = useRouter()
+  const { theme, setTheme } = useTheme()
   const profileId = user?.id ?? UID
   const profileName = user ? user.name || '用户' : mockUser.name
   const profileAvatar = user ? user.avatar : mockUser.avatar
   const [copied, setCopied] = useState(false)
   const [activeTab, setActiveTab] = useState('笔记')
+  const [infoDialog, setInfoDialog] = useState<'privacy' | 'support' | null>(null)
+  const [isSigningOut, setIsSigningOut] = useState(false)
   const copyUid = useCallback(() => {
     navigator.clipboard.writeText(profileId).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
     })
   }, [profileId])
+
+  const handleSignOut = useCallback(async () => {
+    if (isSigningOut)
+      return
+    setIsSigningOut(true)
+    try {
+      await signOut()
+      router.replace('/login')
+    }
+    catch {
+      setIsSigningOut(false)
+    }
+  }, [isSigningOut, router, signOut])
 
   return (
     <div className="bg-background min-h-svh">
@@ -69,7 +88,66 @@ export default function MinePage() {
               className="size-28 after:border-0 sm:size-32"
             />
             <div className="flex min-w-0 flex-col items-center sm:items-start">
-              <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{profileName}</h1>
+              <div className="flex max-w-full min-w-0 items-center gap-2">
+                <h1 className="max-w-[calc(100vw-8rem)] min-w-0 truncate text-2xl font-bold tracking-tight sm:max-w-sm sm:text-3xl">{profileName}</h1>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon-lg" className="shrink-0 rounded-full" aria-label="更多设置" title="更多设置">
+                      <HugeiconsIcon icon={MoreHorizontalIcon} />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" sideOffset={8} className="w-56">
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem>
+                        <HugeiconsIcon icon={Edit02Icon} />
+                        编辑资料
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <HugeiconsIcon icon={Share08Icon} />
+                        分享主页
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem onSelect={() => setInfoDialog('privacy')}>
+                        <HugeiconsIcon icon={Agreement01Icon} />
+                        隐私协议
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => setInfoDialog('support')}>
+                        <HugeiconsIcon icon={CustomerService01Icon} />
+                        帮助与客服
+                      </DropdownMenuItem>
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          <HugeiconsIcon icon={Sun01Icon} />
+                          主题
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuRadioGroup value={theme ?? 'system'} onValueChange={setTheme}>
+                            <DropdownMenuRadioItem value="system">
+                              <HugeiconsIcon icon={ComputerIcon} />
+                              跟随系统
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="light">
+                              <HugeiconsIcon icon={Sun01Icon} />
+                              浅色模式
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="dark">
+                              <HugeiconsIcon icon={Moon01Icon} />
+                              深色模式
+                            </DropdownMenuRadioItem>
+                          </DropdownMenuRadioGroup>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive" disabled={isSigningOut} onSelect={() => void handleSignOut()}>
+                      <HugeiconsIcon icon={Logout01Icon} />
+                      {isSigningOut ? '正在退出…' : '退出登录'}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <button
                 onClick={copyUid}
                 className="text-muted-foreground mt-1 inline-flex items-center gap-1 text-xs tabular-nums transition-colors hover:text-foreground"
@@ -100,35 +178,33 @@ export default function MinePage() {
               </div>
             </div>
           </div>
-
-          <div className="absolute top-6 right-0">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon-lg" className="rounded-full" aria-label="更多" title="更多">
-                  <HugeiconsIcon icon={MoreHorizontalIcon} />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={8}>
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <HugeiconsIcon icon={Edit02Icon} />
-                    编辑资料
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <HugeiconsIcon icon={Share08Icon} />
-                    分享主页
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/settings">
-                      <HugeiconsIcon icon={Settings01Icon} />
-                      设置
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
         </section>
+
+        <Dialog open={infoDialog === 'privacy'} onOpenChange={open => !open && setInfoDialog(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>隐私协议</DialogTitle>
+              <DialogDescription>我们会在服务所需范围内使用账号信息，为你提供登录、个人主页和内容互动功能。</DialogDescription>
+            </DialogHeader>
+            <div className="text-muted-foreground space-y-3 text-sm leading-6">
+              <p>我们不会出售你的个人信息。你可以在需要时联系平台，了解或申请处理与你的账号相关的数据。</p>
+              <p>隐私协议的完整版本会在服务正式上线前更新，并在这里持续提供查看入口。</p>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={infoDialog === 'support'} onOpenChange={open => !open && setInfoDialog(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>帮助与客服</DialogTitle>
+              <DialogDescription>遇到登录、内容发布或账号使用问题，可以联系我们。</DialogDescription>
+            </DialogHeader>
+            <div className="text-muted-foreground space-y-3 text-sm leading-6">
+              <p>请准备好问题描述和相关页面信息，我们会尽快协助你处理。</p>
+              <p>客服入口正在完善，当前版本可以通过应用反馈渠道联系我们。</p>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         <div>
           <div className="flex items-center justify-center gap-1 pb-3">

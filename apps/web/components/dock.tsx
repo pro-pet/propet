@@ -16,7 +16,18 @@ const DEFAULT_DOCK_GAP = 8
 const DEFAULT_ACTIVE_EXTRA_WIDTH = 0
 const DEFAULT_BADGE_MAX = 99
 const DOCK_PADDING = 6
-const dockTransition = { duration: 0.22 } as const
+const dockTransition = {
+  type: 'spring',
+  stiffness: 220,
+  damping: 20,
+  // mass: 0.85,
+} as const
+// Keep label clipping and opacity monotonic while the surrounding dock springs.
+const labelTransition = {
+  type: 'tween',
+  duration: 0.18,
+  ease: 'easeOut',
+} as const
 export const DOCK_SURFACE_CLASS = 'bg-background/80 backdrop-blur-sm relative flex items-center rounded-full p-1.5 shadow-2xl'
 
 export interface DockItem {
@@ -193,8 +204,8 @@ export function Dock({
                     maxWidth: isActive ? labelWidth : 0,
                     opacity: isActive ? 1 : 0,
                   }}
-                  transition={dockTransition}
-                  className="hidden overflow-hidden text-sm font-medium whitespace-nowrap text-primary-foreground sm:inline-block"
+                  transition={labelTransition}
+                  className="hidden shrink-0 overflow-hidden text-sm font-medium whitespace-nowrap text-primary-foreground sm:inline-block"
                 >
                   {tab.label}
                 </motion.span>

@@ -6,6 +6,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 interface AuthContextValue {
   user: CurrentUser | null
   signIn: (email: string, password: string) => Promise<void>
+  signOut: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -74,7 +75,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  const value = useMemo(() => ({ user, signIn }), [user, signIn])
+  const signOut = useCallback(async () => {
+    const response = await fetch('/api/session', { method: 'DELETE' })
+    if (!response.ok)
+      throw new Error('退出登录失败，请稍后重试')
+    setUser(null)
+  }, [])
+
+  const value = useMemo(() => ({ user, signIn, signOut }), [user, signIn, signOut])
 
   return <AuthContext value={value}>{children}</AuthContext>
 }

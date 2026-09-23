@@ -81,3 +81,9 @@ export async function POST(request: NextRequest) {
     return json({ message: '登录服务暂时不可用，请稍后重试' }, 503)
   }
 }
+
+export async function DELETE() {
+  const result = json({ user: null })
+  result.cookies.set(SESSION_COOKIE, '', { ...cookieOptions, maxAge: 0 })
+  return result
+}
