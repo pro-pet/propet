@@ -1,7 +1,7 @@
 'use client'
 
 import type { PaginatedResult, PaginationParams } from './types'
-import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query'
+import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from './client'
 
 export interface PostAuthor {
@@ -55,6 +55,14 @@ export const postQueries = {
     queryFn: ({ signal }) => postsApi.get(id, signal),
     enabled: Boolean(id),
   }),
+}
+
+export function usePosts(params: PaginationParams = {}) {
+  return useQuery(postQueries.list(params))
+}
+
+export function usePost(id: string) {
+  return useQuery(postQueries.detail(id))
 }
 
 export function useCreatePost() {

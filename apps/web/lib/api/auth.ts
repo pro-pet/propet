@@ -1,7 +1,7 @@
 'use client'
 
 import type { CurrentUser } from '@/lib/current-user'
-import { queryOptions } from '@tanstack/react-query'
+import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from './client'
 
 export interface AuthCredentials {
@@ -33,3 +33,37 @@ export const sessionQueryOptions = queryOptions({
   queryFn: ({ signal }) => apiClient.get<AuthSession>('/session', { signal }),
   staleTime: 0,
 })
+
+export function useSession() {
+  return useQuery(sessionQueryOptions)
+}
+
+export function useLogin() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: authApi.login,
+    onMutate: () => queryClient.cancelQueries({ queryKey: authQueryKeys.session }),
+    onSuccess: session => queryClient.setQueryData(authQueryKeys.session, session),
+  })
+}
+
+export function useRegister() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: authApi.register,
+    onMutate: () => queryClient.cancelQueries({ queryKey: authQueryKeys.session }),
+    onSuccess: session => queryClient.setQueryData(authQueryKeys.session, session),
+  })
+}
+
+export function useLogout() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: authApi.logout,
+    onMutate: () => queryClient.cancelQueries({ queryKey: authQueryKeys.session }),
+    onSuccess: session => queryClient.setQueryData(authQueryKeys.session, session),
+  })
+}
