@@ -1,66 +1,58 @@
 import type { NextRequest } from 'next/server'
 import type { CurrentUser } from '@/lib/current-user'
-import { NextResponse } from 'next/server'
-
-const SESSION_COOKIE = 'propet-session'
-const apiUrl = `${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001').replace(/\/$/, '')}/api`
-const cookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
-  path: '/',
-}
-
-function json(body: unknown, status = 200) {
-  return NextResponse.json(body, { status, headers: { 'Cache-Control': 'no-store' } })
-}
+import {
+  apiJson,
+  BACKEND_API_URL,
+  hasSameOrigin,
+  SESSION_COOKIE_NAME,
+  sessionCookieOptions,
+} from '@/lib/api/server'
 
 export async function GET(request: NextRequest) {
-  const token = request.cookies.get(SESSION_COOKIE)?.value
+  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value
   if (!token)
-    return json({ user: null })
+    return apiJson({ user: null })
 
   try {
-    const response = await fetch(`${apiUrl}/auth/me`, {
+    const response = await fetch(`${BACKEND_API_URL}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: 'no-store',
       signal: AbortSignal.timeout(10000),
     })
     if (response.status === 401) {
-      const result = json({ user: null })
-      result.cookies.set(SESSION_COOKIE, '', { ...cookieOptions, maxAge: 0 })
+      const result = apiJson({ user: null })
+      result.cookies.set(SESSION_COOKIE_NAME, '', { ...sessionCookieOptions, maxAge: 0 })
       return result
     }
     if (!response.ok)
-      return json({ message: '暂时无法获取登录状态' }, 503)
+      return apiJson({ message: '暂时无法获取登录状态' }, 503)
 
     const { data } = await response.json() as { data: CurrentUser }
-    return json({ user: { id: data.id, name: data.name, avatar: data.avatar } })
+    return apiJson({ user: { id: data.id, name: data.name, avatar: data.avatar } })
   }
   catch {
-    return json({ message: '暂时无法获取登录状态' }, 503)
+    return apiJson({ message: '暂时无法获取登录状态' }, 503)
   }
 }
 
 export async function POST(request: NextRequest) {
-  const origin = request.headers.get('origin')
-  if (origin && origin !== request.nextUrl.origin)
-    return json({ message: '请求来源无效' }, 403)
+  if (!hasSameOrigin(request))
+    return apiJson({ message: '请求来源无效' }, 403)
 
   let credentials: { email?: unknown, password?: unknown }
   try {
     credentials = await request.json()
   }
   catch {
-    return json({ message: '登录信息格式无效' }, 400)
+    return apiJson({ message: '登录信息格式无效' }, 400)
   }
   if (!credentials || typeof credentials.email !== 'string' || !credentials.email.trim()
     || typeof credentials.password !== 'string' || !credentials.password) {
-    return json({ message: '请输入邮箱和密码' }, 400)
+    return apiJson({ message: '请输入邮箱和密码' }, 400)
   }
 
   try {
-    const response = await fetch(`${apiUrl}/auth/login`, {
+    const response = await fetch(`${BACKEND_API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: credentials.email.trim(), password: credentials.password }),
@@ -68,22 +60,25 @@ export async function POST(request: NextRequest) {
       signal: AbortSignal.timeout(10000),
     })
     if (response.status === 401)
-      return json({ message: '邮箱或密码不正确' }, 401)
+      return apiJson({ message: '邮箱或密码不正确' }, 401)
     if (!response.ok)
-      return json({ message: '登录服务暂时不可用，请稍后重试' }, 503)
+      return apiJson({ message: '登录服务暂时不可用，请稍后重试' }, 503)
 
     const { data } = await response.json() as { data: { user: CurrentUser, token: string } }
-    const result = json({ user: { id: data.user.id, name: data.user.name, avatar: data.user.avatar } })
-    result.cookies.set(SESSION_COOKIE, data.token, cookieOptions)
+    const result = apiJson({ user: { id: data.user.id, name: data.user.name, avatar: data.user.avatar } })
+    result.cookies.set(SESSION_COOKIE_NAME, data.token, sessionCookieOptions)
     return result
   }
   catch {
-    return json({ message: '登录服务暂时不可用，请稍后重试' }, 503)
+    return apiJson({ message: '登录服务暂时不可用，请稍后重试' }, 503)
   }
 }
 
-export async function DELETE() {
-  const result = json({ user: null })
-  result.cookies.set(SESSION_COOKIE, '', { ...cookieOptions, maxAge: 0 })
+export async function DELETE(request: NextRequest) {
+  if (!hasSameOrigin(request))
+    return apiJson({ message: '请求来源无效' }, 403)
+
+  const result = apiJson({ user: null })
+  result.cookies.set(SESSION_COOKIE_NAME, '', { ...sessionCookieOptions, maxAge: 0 })
   return result
 }

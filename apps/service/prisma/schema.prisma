@@ -24,6 +24,7 @@ model User {
   birthday  DateTime?
 
   pets Pet[]
+  posts Post[]
 
   @@map("users")
 }
@@ -42,4 +43,19 @@ model Pet {
   updatedAt DateTime  @updatedAt @map("updated_at")
 
   @@map("pets")
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String   @db.VarChar(120)
+  content   String   @db.Text
+  images    String[] @default([])
+  authorId  String   @map("author_id")
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([createdAt(sort: Desc)])
+  @@index([authorId, createdAt(sort: Desc)])
+  @@map("posts")
 }

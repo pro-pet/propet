@@ -1,8 +1,6 @@
 import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '')
-
 export class ApiError extends Error {
   status?: number
   code?: string
@@ -18,7 +16,7 @@ export class ApiError extends Error {
 }
 
 export const httpClient = axios.create({
-  baseURL: apiBaseUrl ? `${apiBaseUrl}/api` : '/api',
+  baseURL: '/api',
   timeout: 15_000,
   withCredentials: true,
   headers: { Accept: 'application/json' },
@@ -49,15 +47,12 @@ httpClient.interceptors.response.use(
   },
 )
 
-export const api = {
+export const apiClient = {
   get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return httpClient.get<T>(url, config).then(response => response.data)
   },
   post<T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<T> {
     return httpClient.post<T>(url, data, config).then(response => response.data)
-  },
-  put<T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<T> {
-    return httpClient.put<T>(url, data, config).then(response => response.data)
   },
   patch<T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<T> {
     return httpClient.patch<T>(url, data, config).then(response => response.data)
