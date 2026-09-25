@@ -90,7 +90,7 @@ function FormControl({ render, ...props }: useRender.ComponentProps<'div'>) {
     props: mergeProps<'div'>(
       {
         'data-slot': 'form-control',
-        id: formItemId,
+        'id': formItemId,
         'aria-describedby': describedBy,
         'aria-invalid': Boolean(error),
       } as React.ComponentProps<'div'>,
