@@ -36,4 +36,4 @@
 - Final: `pnpm --filter @propet/ui exec tsc --noEmit` passed; `pnpm --filter web typecheck` passed; `pnpm build` passed.
 - `pnpm --filter @propet/ui lint` now has no migration errors. It still reports the baseline trailing-space error in `animate-ui/primitives/effects/highlight.tsx` and the baseline warnings in `highlight.tsx` and `carousel.tsx`; these files were intentionally left alone.
 - `pnpm --filter @propet/service test --runInBand` passed: 2 suites and 3 tests.
-- `pnpm --filter @propet/service test:e2e --runInBand` remains blocked by the pre-existing test environment requirement that `JWT_SECRET` be set; the application code was not changed by this migration.
+- `pnpm --filter @propet/service test:e2e --runInBand` remains blocked by the pre-existing test environment requirements for `JWT_SECRET` and `DATABASE_URL`; the application code was not changed by this migration.
