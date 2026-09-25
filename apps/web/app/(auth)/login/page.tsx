@@ -46,7 +46,7 @@ export default function LoginPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>邮箱</FormLabel>
-                  <FormControl><Input {...field} type="email" autoComplete="email" placeholder="请输入邮箱" /></FormControl>
+                  <FormControl render={<Input {...field} type="email" autoComplete="email" placeholder="请输入邮箱" />} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -58,7 +58,7 @@ export default function LoginPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>密码</FormLabel>
-                  <FormControl><Input {...field} type="password" autoComplete="current-password" placeholder="请输入密码" /></FormControl>
+                  <FormControl render={<Input {...field} type="password" autoComplete="current-password" placeholder="请输入密码" />} />
                   <FormMessage />
                 </FormItem>
               )}

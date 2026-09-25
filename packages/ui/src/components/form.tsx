@@ -1,8 +1,9 @@
 'use client'
 
 import type { ControllerProps, FieldPath, FieldValues } from 'react-hook-form'
+import { mergeProps } from '@base-ui/react/merge-props'
+import { useRender } from '@base-ui/react/use-render'
 import { cn } from '@propet/ui/lib/utils'
-import { Slot } from 'radix-ui'
 import * as React from 'react'
 import { Controller, FormProvider, useFormContext } from 'react-hook-form'
 
@@ -80,19 +81,23 @@ function FormLabel({ className, ...props }: React.ComponentProps<'label'>) {
   )
 }
 
-function FormControl({ ...props }: React.ComponentProps<typeof Slot.Root>) {
+function FormControl({ render, ...props }: useRender.ComponentProps<'div'>) {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
   const describedBy = error ? `${formDescriptionId} ${formMessageId}` : formDescriptionId
 
-  return (
-    <Slot.Root
-      data-slot="form-control"
-      id={formItemId}
-      aria-describedby={describedBy}
-      aria-invalid={Boolean(error)}
-      {...props}
-    />
-  )
+  return useRender({
+    defaultTagName: 'div',
+    props: mergeProps<'div'>(
+      {
+        'data-slot': 'form-control',
+        id: formItemId,
+        'aria-describedby': describedBy,
+        'aria-invalid': Boolean(error),
+      } as React.ComponentProps<'div'>,
+      props,
+    ),
+    render,
+  })
 }
 
 function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {

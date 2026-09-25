@@ -48,7 +48,7 @@ export default function RegisterPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>昵称</FormLabel>
-                  <FormControl><Input {...field} placeholder="请输入昵称" autoComplete="nickname" /></FormControl>
+                  <FormControl render={<Input {...field} placeholder="请输入昵称" autoComplete="nickname" />} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -60,7 +60,7 @@ export default function RegisterPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>邮箱</FormLabel>
-                  <FormControl><Input {...field} type="email" placeholder="请输入邮箱" autoComplete="email" /></FormControl>
+                  <FormControl render={<Input {...field} type="email" placeholder="请输入邮箱" autoComplete="email" />} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -72,7 +72,7 @@ export default function RegisterPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>密码</FormLabel>
-                  <FormControl><Input {...field} type="password" placeholder="请输入密码" autoComplete="new-password" /></FormControl>
+                  <FormControl render={<Input {...field} type="password" placeholder="请输入密码" autoComplete="new-password" />} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -84,7 +84,7 @@ export default function RegisterPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>确认密码</FormLabel>
-                  <FormControl><Input {...field} type="password" placeholder="请再次输入密码" autoComplete="new-password" /></FormControl>
+                  <FormControl render={<Input {...field} type="password" placeholder="请再次输入密码" autoComplete="new-password" />} />
                   <FormMessage />
                 </FormItem>
               )}

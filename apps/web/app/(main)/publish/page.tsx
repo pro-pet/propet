@@ -42,7 +42,7 @@ export default function PublishPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="sr-only">标题</FormLabel>
-                  <FormControl><Input {...field} placeholder="标题" aria-label="标题" className="h-12" /></FormControl>
+                  <FormControl render={<Input {...field} placeholder="标题" aria-label="标题" className="h-12" />} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -54,7 +54,7 @@ export default function PublishPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="sr-only">内容</FormLabel>
-                  <FormControl><Textarea {...field} placeholder="分享你的故事..." aria-label="分享内容" className="min-h-52 resize-none" /></FormControl>
+                  <FormControl render={<Textarea {...field} placeholder="分享你的故事..." aria-label="分享内容" className="min-h-52 resize-none" />} />
                   <FormMessage />
                 </FormItem>
               )}
