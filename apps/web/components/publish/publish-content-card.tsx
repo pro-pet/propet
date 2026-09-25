@@ -2,6 +2,7 @@
 
 import type { Control } from 'react-hook-form'
 import type { PublishFormValues } from './publish-types'
+import type { Pet } from '@/lib/api/pets'
 import { Card, CardContent, CardFooter, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, Textarea } from '@propet/ui'
 import { ComposerPicker } from './composer-picker'
 
@@ -19,6 +20,7 @@ interface PublishContentCardProps {
   mentions: string[]
   onTopicToggle: (value: string) => void
   onMentionToggle: (value: string) => void
+  pets: Pet[]
 }
 
 export function PublishContentCard({
@@ -35,6 +37,7 @@ export function PublishContentCard({
   mentions,
   onTopicToggle,
   onMentionToggle,
+  pets,
 }: PublishContentCardProps) {
   return (
     <Card size="sm">
@@ -90,6 +93,7 @@ export function PublishContentCard({
               onSearchChange={onMentionSearchChange}
               selected={mentions}
               onToggle={onMentionToggle}
+              pets={pets}
             />
           </div>
           <span className="text-muted-foreground text-xs">

@@ -5,9 +5,11 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, Button, cn } from '@propet/ui'
 import { motion } from 'motion/react'
 import Image from 'next/image'
+import { useState } from 'react'
 import { getPostLayoutIds } from '@/components/post-card'
 import { PostComment } from '@/components/post-comment'
 import { PostEngagementBar } from '@/components/post-engagement-bar'
+import { useToggleFollow } from '@/lib/api/follows'
 
 interface ExpandedPostCardPost {
   id: string
@@ -17,6 +19,10 @@ interface ExpandedPostCardPost {
   coverImage?: string
   coverClassName?: string
   badge?: string
+  authorId?: string
+  authorAvatar?: string | null
+  content?: string
+  pets?: Array<{ id: string, nickname: string, avatar?: string | null, species?: string }>
 }
 
 interface ExpandedPostCardComment {
@@ -43,6 +49,28 @@ export function ExpandedPostCard({
   onClose,
 }: ExpandedPostCardProps) {
   const layoutIds = getPostLayoutIds(post.id)
+  const toggleFollow = useToggleFollow()
+  const [followingAuthor, setFollowingAuthor] = useState(false)
+  const [followingPets, setFollowingPets] = useState<Set<string>>(new Set())
+
+  const changeAuthorFollow = () => {
+    if (!post.authorId)
+      return
+    const next = !followingAuthor
+    setFollowingAuthor(next)
+    toggleFollow.mutate({ type: 'users', id: post.authorId, following: followingAuthor })
+  }
+
+  const changePetFollow = (id: string) => {
+    const next = new Set(followingPets)
+    const following = next.has(id)
+    if (following)
+      next.delete(id)
+    else
+      next.add(id)
+    setFollowingPets(next)
+    toggleFollow.mutate({ type: 'pets', id, following })
+  }
 
   return (
     <>
@@ -91,14 +119,15 @@ export function ExpandedPostCard({
                       <Avatar
                         size="lg"
                         name={post.author}
+                        src={post.authorAvatar}
                         fallback={post.author.slice(0, 1)}
                       />
                       <span className="truncate text-base font-semibold">{post.author}</span>
                     </motion.div>
 
-                    <Button size="lg" className="rounded-full">
+                    <Button size="lg" className="rounded-full" variant={followingAuthor ? 'secondary' : 'default'} onClick={changeAuthorFollow}>
                       <HugeiconsIcon icon={Add01Icon} size={14} />
-                      关注
+                      {followingAuthor ? '已关注' : '关注主人'}
                     </Button>
                   </div>
                 </div>
@@ -122,8 +151,18 @@ export function ExpandedPostCard({
                     </div>
 
                     <p className="text-muted-foreground text-sm leading-6">
-                      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum aperiam qui explicabo eveniet nobis! Quisquam aperiam cupiditate, nulla sit nisi exercitationem a asperiores est iste molestiae architecto laboriosam, officia ducimus?
+                      {post.content || '记录毛孩子的日常，分享你的经验或发现。'}
                     </p>
+                    {post.pets && post.pets.length > 0 && (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {post.pets.map(pet => (
+                          <Button key={pet.id} type="button" variant={followingPets.has(pet.id) ? 'secondary' : 'outline'} size="sm" className="rounded-full" onClick={() => changePetFollow(pet.id)}>
+                            {followingPets.has(pet.id) ? '已关注 ' : '关注 '}
+                            {pet.nickname}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
                     <p className="text-muted-foreground mt-3 text-xs">
                       发布于
                       {' '}

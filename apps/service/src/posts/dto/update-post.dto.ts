@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
-import { ArrayMaxSize, IsArray, IsNotEmpty, IsString, MaxLength, ValidateIf } from 'class-validator'
+import { ArrayMaxSize, ArrayUnique, IsArray, IsNotEmpty, IsOptional, IsString, MaxLength, ValidateIf } from 'class-validator'
 
 export class UpdatePostDto {
   @ApiPropertyOptional({ example: '第一次带猫咪去露营' })
@@ -26,4 +26,12 @@ export class UpdatePostDto {
   @IsString({ each: true })
   @MaxLength(2048, { each: true })
   images?: string[]
+
+  @ApiPropertyOptional({ type: [String], maxItems: 20, description: '被提及的宠物 ID' })
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(20)
+  @ArrayUnique()
+  @IsString({ each: true })
+  petIds?: string[]
 }

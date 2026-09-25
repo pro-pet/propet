@@ -1,7 +1,7 @@
 'use client'
 
 import type { DockItem } from '@/components/dock'
-import { AiMagicIcon, Home11Icon, Mail01Icon, Notification01Icon, SentIcon, ShoppingBag01Icon, UserIcon } from '@hugeicons/core-free-icons'
+import { AiMagicIcon, Bone01Icon, Home11Icon, Mail01Icon, Notification01Icon, SentIcon, ShoppingBag01Icon, UserIcon } from '@hugeicons/core-free-icons'
 import { motion } from 'motion/react'
 import { useMemo } from 'react'
 import { useAuth } from '@/components/auth-provider'
@@ -9,6 +9,7 @@ import { Dock } from '@/components/dock'
 
 const mainItems: DockItem[] = [
   { href: '/community', label: '社区', icon: Home11Icon },
+  { href: '/pets', label: '宠物', icon: Bone01Icon },
   { href: '/publish', label: '发布', icon: SentIcon },
   { href: '/ai', label: 'AI 助手', icon: AiMagicIcon, disabled: true },
   { href: '/shopping', label: '购物', icon: ShoppingBag01Icon },

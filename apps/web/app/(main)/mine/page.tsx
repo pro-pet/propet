@@ -87,7 +87,7 @@ export default function MinePage() {
                 <h1 className="max-w-[calc(100vw-8rem)] min-w-0 truncate text-2xl font-bold tracking-tight sm:max-w-sm sm:text-3xl">{profileName}</h1>
                 <DropdownMenu>
                   <DropdownMenuTrigger render={<Button variant="ghost" size="icon-lg" className="shrink-0 rounded-full" aria-label="更多设置" title="更多设置" />}>
-                      <HugeiconsIcon icon={MoreHorizontalIcon} />
+                    <HugeiconsIcon icon={MoreHorizontalIcon} />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" sideOffset={8} className="w-56">
                     <DropdownMenuGroup>
@@ -198,6 +198,8 @@ export default function MinePage() {
             </div>
           </DialogContent>
         </Dialog>
+
+        <div className="mx-auto flex max-w-3xl justify-end pt-4"><Button type="button" variant="ghost" size="sm" onClick={() => router.push('/following')}>查看我的关注</Button></div>
 
         <div>
           <div className="flex items-center justify-center gap-1 pb-3">

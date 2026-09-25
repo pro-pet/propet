@@ -15,6 +15,10 @@ export interface WaterfallPost {
   coverImage?: string
   coverClassName?: string
   badge?: string
+  authorId?: string
+  authorAvatar?: string | null
+  content?: string
+  pets?: Array<{ id: string, nickname: string, avatar?: string | null, species?: string, followerCount?: number }>
 }
 
 interface WaterfallFeedProps {
@@ -124,7 +128,7 @@ export function WaterfallFeed({ posts }: WaterfallFeedProps) {
             key={post.id}
             {...post}
             onOpen={() => setActivePost(post)}
-            onAuthorClick={() => router.push(`/user/${encodeURIComponent(post.author)}`)}
+            onAuthorClick={() => router.push(`/user/${encodeURIComponent(post.authorId ?? post.author)}`)}
             className="mb-4"
           />
         ))}

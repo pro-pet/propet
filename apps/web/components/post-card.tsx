@@ -18,6 +18,8 @@ export interface PostCardProps {
   className?: string
   onOpen?: () => void
   onAuthorClick?: () => void
+  authorAvatar?: string | null
+  pets?: Array<{ id: string, nickname: string }>
 }
 
 export function getPostLayoutIds(id: string) {
@@ -42,6 +44,8 @@ export function PostCard({
   className,
   onOpen,
   onAuthorClick,
+  authorAvatar,
+  pets = [],
 }: PostCardProps) {
   const layoutIds = getPostLayoutIds(id)
 
@@ -94,12 +98,20 @@ export function PostCard({
           >
             <Avatar
               size="sm"
+              src={authorAvatar}
               name={author}
               fallback={author.slice(0, 1)}
               className="shrink-0"
             />
             <span className="text-muted-foreground truncate text-sm">{author}</span>
           </Button>
+
+          {pets.length > 0 && (
+            <span className="text-muted-foreground truncate text-xs">
+              @
+              {pets.map(pet => pet.nickname).join(' @')}
+            </span>
+          )}
 
           <span className="text-muted-foreground inline-flex shrink-0 items-center gap-1 text-xs">
             <HugeiconsIcon icon={FavouriteIcon} size={14} />

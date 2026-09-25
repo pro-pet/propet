@@ -1,10 +1,11 @@
 'use client'
 
+import type { Pet } from '@/lib/api/pets'
 import { AtIcon, HashtagIcon, Search01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, Button, Input } from '@propet/ui'
 import { Popover, PopoverContent, PopoverHeader, PopoverTitle, PopoverTrigger } from '@propet/ui/components/popover'
-import { COMMUNITY_TOPICS, FOLLOWING_PEOPLE } from './publish-types'
+import { COMMUNITY_TOPICS } from './publish-types'
 
 interface ComposerPickerProps {
   type: 'topic' | 'mention'
@@ -14,6 +15,7 @@ interface ComposerPickerProps {
   onSearchChange: (value: string) => void
   selected: string[]
   onToggle: (value: string) => void
+  pets?: Pet[]
 }
 
 export function ComposerPicker({
@@ -24,11 +26,12 @@ export function ComposerPicker({
   onSearchChange,
   selected,
   onToggle,
+  pets = [],
 }: ComposerPickerProps) {
   const isTopic = type === 'topic'
   const normalizedSearch = search.trim().toLowerCase()
-  const filteredPeople = FOLLOWING_PEOPLE.filter(person => `${person.value}${person.subtitle}`.toLowerCase().includes(normalizedSearch))
   const filteredTopics = COMMUNITY_TOPICS.filter(topic => topic.toLowerCase().includes(normalizedSearch))
+  const filteredPets = pets.filter(pet => `${pet.nickname}${pet.species}${pet.breed ?? ''}`.toLowerCase().includes(normalizedSearch))
 
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
@@ -46,8 +49,8 @@ export function ComposerPicker({
             autoFocus
             value={search}
             onChange={event => onSearchChange(event.target.value)}
-            placeholder={isTopic ? '搜索话题' : '搜索我关注的人'}
-            aria-label={isTopic ? '搜索话题' : '搜索我关注的人'}
+            placeholder={isTopic ? '搜索话题' : '搜索我的宠物'}
+            aria-label={isTopic ? '搜索话题' : '搜索我的宠物'}
             className="h-9 pl-9"
           />
         </div>
@@ -70,25 +73,28 @@ export function ComposerPicker({
                   {selected.includes(topic) && <HugeiconsIcon icon={Tick02Icon} size={17} className="text-primary shrink-0" />}
                 </button>
               ))
-            : filteredPeople.map(person => (
+            : filteredPets.map(pet => (
                 <button
-                  key={person.value}
+                  key={pet.id}
                   type="button"
-                  aria-pressed={selected.includes(person.value)}
-                  onClick={() => onToggle(person.value)}
+                  aria-pressed={selected.includes(pet.id)}
+                  onClick={() => onToggle(pet.id)}
                   className="hover:bg-muted flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-left transition-colors"
                 >
                   <span className="flex min-w-0 items-center gap-2.5">
-                    <Avatar name={person.value} fallback={person.avatar} size="sm" />
+                    <Avatar src={pet.avatar} name={pet.nickname} fallback={pet.nickname.slice(0, 1)} size="sm" />
                     <span className="min-w-0">
-                      <span className="block truncate text-sm">{person.value}</span>
-                      <span className="text-muted-foreground block truncate text-xs">{person.subtitle}</span>
+                      <span className="block truncate text-sm">{pet.nickname}</span>
+                      <span className="text-muted-foreground block truncate text-xs">
+                        {pet.species}
+                        {pet.breed ? ` · ${pet.breed}` : ''}
+                      </span>
                     </span>
                   </span>
-                  {selected.includes(person.value) && <HugeiconsIcon icon={Tick02Icon} size={17} className="text-primary shrink-0" />}
+                  {selected.includes(pet.id) && <HugeiconsIcon icon={Tick02Icon} size={17} className="text-primary shrink-0" />}
                 </button>
               ))}
-          {((isTopic && filteredTopics.length === 0) || (!isTopic && filteredPeople.length === 0)) && (
+          {((isTopic && filteredTopics.length === 0) || (!isTopic && filteredPets.length === 0)) && (
             <p className="text-muted-foreground px-3 py-6 text-center text-sm">没有找到匹配项</p>
           )}
         </div>

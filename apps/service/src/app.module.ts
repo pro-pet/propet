@@ -7,6 +7,8 @@ import { CoreModule } from './common/core.module'
 import { findWorkspaceRoot, getEnvFilePaths } from './common/utils/workspace'
 import { HealthController } from './health.controller'
 import { PostsModule } from './posts/posts.module'
+import { PetsModule } from './pets/pets.module'
+import { FollowsModule } from './follows/follows.module'
 import { PrismaModule } from './prisma/prisma.module'
 import { UserModule } from './user/user.module'
 
@@ -23,6 +25,8 @@ const root = findWorkspaceRoot(process.cwd())
     AuthModule,
     UserModule,
     PostsModule,
+    PetsModule,
+    FollowsModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],

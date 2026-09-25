@@ -54,6 +54,21 @@ export class UserService {
         name: true,
         avatar: true,
         createdAt: true,
+        pets: {
+          orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            nickname: true,
+            species: true,
+            breed: true,
+            gender: true,
+            birthday: true,
+            avatar: true,
+            ownerId: true,
+            _count: { select: { followers: true } },
+          },
+        },
+        _count: { select: { followers: true, following: true, posts: true } },
       },
     })
 
@@ -61,7 +76,14 @@ export class UserService {
       throw new NotFoundException(`User #${id} not found`)
     }
 
-    return user
+    const { _count, pets, ...profile } = user
+    return {
+      ...profile,
+      pets: pets.map(({ _count: petCount, ...pet }) => ({ ...pet, followerCount: petCount.followers })),
+      followerCount: _count.followers,
+      followingCount: _count.following,
+      postCount: _count.posts,
+    }
   }
 
   async list(dto: PaginationDto): Promise<Paginated<UserItem>> {

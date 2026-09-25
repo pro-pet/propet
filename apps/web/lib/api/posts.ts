@@ -10,6 +10,19 @@ export interface PostAuthor {
   avatar: string | null
 }
 
+export interface PostPet {
+  id: string
+  nickname: string
+  species: string
+  breed: string | null
+  gender: string
+  birthday: string | null
+  avatar: string | null
+  ownerId: string
+  owner: PostAuthor
+  followerCount: number
+}
+
 export interface Post {
   id: string
   title: string
@@ -17,6 +30,7 @@ export interface Post {
   images: string[]
   authorId: string
   author: PostAuthor
+  pets: PostPet[]
   createdAt: string
   updatedAt: string
 }
@@ -25,6 +39,7 @@ export interface CreatePostInput {
   title: string
   content: string
   images?: string[]
+  petIds?: string[]
 }
 
 export type UpdatePostInput = Partial<CreatePostInput>

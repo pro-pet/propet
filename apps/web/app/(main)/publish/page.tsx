@@ -10,11 +10,13 @@ import { PublishHeader } from '@/components/publish/publish-header'
 import { PublishImagesCard } from '@/components/publish/publish-images-card'
 import { PublishSettingsCard } from '@/components/publish/publish-settings-card'
 import { MAX_IMAGES } from '@/components/publish/publish-types'
+import { useMyPets } from '@/lib/api/pets'
 import { useCreatePost } from '@/lib/api/posts'
 
 export default function PublishPage() {
   const router = useRouter()
   const createPost = useCreatePost()
+  const petsQuery = useMyPets()
   const [error, setError] = useState('')
   const [images, setImages] = useState<ImageDraft[]>([])
   const [topics, setTopics] = useState<string[]>([])
@@ -71,13 +73,16 @@ export default function PublishPage() {
   }
 
   const toggleMention = (value: string) => {
+    const pet = petsQuery.data?.find(item => item.id === value)
+    if (!pet)
+      return
     if (mentions.includes(value)) {
       setMentions(current => current.filter(item => item !== value))
-      removeFromContent(`@${value}`)
+      removeFromContent(`@${pet.nickname}`)
       return
     }
     setMentions(current => [...current, value])
-    appendToContent(`@${value}`)
+    appendToContent(`@${pet.nickname}`)
   }
 
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,7 +128,7 @@ export default function PublishPage() {
     }
 
     try {
-      await createPost.mutateAsync(values)
+      await createPost.mutateAsync({ ...values, petIds: mentions })
       router.push('/community')
     }
     catch (submitError) {
@@ -151,6 +156,7 @@ export default function PublishPage() {
               mentions={mentions}
               onTopicToggle={toggleTopic}
               onMentionToggle={toggleMention}
+              pets={petsQuery.data ?? []}
             />
             <PublishImagesCard
               images={images}
