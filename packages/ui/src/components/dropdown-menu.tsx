@@ -1,12 +1,12 @@
 'use client'
 
+import type * as React from 'react'
+import { Menu as DropdownMenuPrimitive } from '@base-ui/react/menu'
+
 import { ArrowRight01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
-import { Menu as DropdownMenuPrimitive } from '@base-ui/react/menu'
 import { cn } from '@propet/ui/lib/utils'
-
-import type * as React from 'react'
 
 function DropdownMenu({
   ...props
