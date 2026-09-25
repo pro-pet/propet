@@ -280,7 +280,6 @@ export default function PublishPage() {
     form.setValue('content', `${current}${separator}${value}`, {
       shouldDirty: true,
       shouldTouch: true,
-      shouldValidate: true,
     })
   }
 
@@ -293,7 +292,6 @@ export default function PublishPage() {
     form.setValue('content', nextContent, {
       shouldDirty: true,
       shouldTouch: true,
-      shouldValidate: true,
     })
   }
 
@@ -395,7 +393,7 @@ export default function PublishPage() {
                     <FormItem>
                       <FormLabel className="sr-only">标题</FormLabel>
                       <div className="relative">
-                        <FormControl render={<Input {...field} placeholder="给这次分享起个标题" aria-label="标题" className="h-12 border-0 rounded-none bg-transparent px-0 pr-14 text-lg font-semibold shadow-none placeholder:text-muted-foreground/60 focus:border-0 sm:text-xl" />} />
+                        <FormControl render={<Input {...field} placeholder="给这次分享起个标题" aria-label="标题" className=" border-0 rounded-none bg-transparent px-0 pr-14 text-lg font-semibold shadow-none placeholder:text-muted-foreground/60 focus:border-0 sm:text-xl" />} />
                         <span className="text-muted-foreground pointer-events-none absolute inset-y-0 right-0 flex items-center text-xs">
                           {title?.length ?? 0}
                           /120
@@ -405,7 +403,6 @@ export default function PublishPage() {
                     </FormItem>
                   )}
                 />
-                <div className="bg-border/70 h-px" />
                 <FormField
                   control={form.control}
                   name="content"
@@ -419,47 +416,9 @@ export default function PublishPage() {
                   )}
                 />
 
-                {(topics.length > 0 || mentions.length > 0) && (
-                  <div className="flex flex-wrap gap-2 border-t border-border/70 pt-3">
-                    {topics.map(topic => (
-                      <span key={`topic-${topic}`} className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-full py-1 pl-2.5 pr-1 text-xs font-medium">
-                        #
-                        {topic}
-                        <button
-                          type="button"
-                          aria-label={`移除话题 ${topic}`}
-                          onClick={() => {
-                            setTopics(current => current.filter(item => item !== topic))
-                            removeFromContent(`#${topic}`)
-                          }}
-                          className="hover:bg-primary/15 flex size-5 items-center justify-center rounded-full"
-                        >
-                          <HugeiconsIcon icon={Cancel01Icon} size={13} />
-                        </button>
-                      </span>
-                    ))}
-                    {mentions.map(mention => (
-                      <span key={`mention-${mention}`} className="bg-secondary text-secondary-foreground inline-flex items-center gap-1 rounded-full py-1 pl-2.5 pr-1 text-xs font-medium">
-                        @
-                        {mention}
-                        <button
-                          type="button"
-                          aria-label={`移除提及 ${mention}`}
-                          onClick={() => {
-                            setMentions(current => current.filter(item => item !== mention))
-                            removeFromContent(`@${mention}`)
-                          }}
-                          className="hover:bg-muted flex size-5 items-center justify-center rounded-full"
-                        >
-                          <HugeiconsIcon icon={Cancel01Icon} size={13} />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
               </CardContent>
 
-              <CardFooter className="flex-col items-stretch gap-3 border-t border-border/70 py-3">
+              <CardFooter className="flex-col items-stretch gap-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-1">
                     <ComposerPicker
@@ -491,7 +450,7 @@ export default function PublishPage() {
             </Card>
 
             <Card size="sm">
-              <CardHeader className="gap-1 border-b border-border/70 pb-4">
+              <CardHeader className="gap-1 pb-4">
                 <div className="flex items-center justify-between gap-3">
                   <CardTitle>图片编辑</CardTitle>
                   <span className="text-muted-foreground shrink-0 text-xs">
@@ -541,10 +500,10 @@ export default function PublishPage() {
             </Card>
 
             <Card size="sm">
-              <CardHeader className="border-b border-border/70 pb-4">
+              <CardHeader className="pb-4">
                 <CardTitle>发布设置</CardTitle>
               </CardHeader>
-              <CardContent className="divide-border/70 divide-y">
+              <CardContent>
                 <SettingRow icon={Location01Icon} title="地点">
                   <div className="w-full sm:w-52">
                     <Input value={location} onChange={event => setLocation(event.target.value)} placeholder="添加地点" aria-label="发布地点" />
