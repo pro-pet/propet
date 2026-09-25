@@ -1,12 +1,12 @@
 'use client'
 
+import type * as React from 'react'
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
+
 import { Cancel01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-
-import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
 import { Button } from '@propet/ui/components/button'
 import { cn } from '@propet/ui/lib/utils'
-import type * as React from 'react'
 
 function Dialog({
   ...props
