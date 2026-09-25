@@ -6,7 +6,6 @@ import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { PageSearch } from '@/components/page-search'
 import { useCreatePost } from '@/lib/api/posts'
 
 interface PublishFormValues {
@@ -33,11 +32,6 @@ export default function PublishPage() {
 
   return (
     <div className="bg-background min-h-svh">
-      <header className="sticky top-0 z-[120]">
-        <div className="mx-auto flex h-24 max-w-2xl items-center px-5">
-          <PageSearch />
-        </div>
-      </header>
       <main className="mx-auto max-w-2xl px-5 pb-28 pt-6">
         <Form {...form}>
           <form className="space-y-4" onSubmit={handleSubmit}>

@@ -4,7 +4,6 @@ import { ArrowUp02Icon, SparklesIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Button, Input } from '@propet/ui'
 import { useState } from 'react'
-import { PageSearch } from '@/components/page-search'
 
 const suggestions = ['今天适合带狗狗去哪玩？', '帮我看看猫咪换粮计划', '生成一份宠物生日清单']
 
@@ -18,11 +17,6 @@ export default function AiPage() {
   }
   return (
     <div className="bg-background min-h-svh">
-      <header className="sticky top-0 z-[120]">
-        <div className="mx-auto flex h-24 max-w-2xl items-center px-5">
-          <PageSearch />
-        </div>
-      </header>
       <main className="mx-auto flex min-h-[calc(100svh-7rem)] max-w-2xl flex-col px-5 pb-28 pt-14">
         <div className="text-center">
           <div className="bg-primary text-primary-foreground mx-auto flex size-16 items-center justify-center rounded-3xl shadow-lg"><HugeiconsIcon icon={SparklesIcon} size={30} /></div>

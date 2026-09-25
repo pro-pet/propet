@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { PageSearch } from '@/components/page-search'
 import { WaterfallFeed } from '@/components/waterfall-feed'
 
 const communityTags = ['萌宠日常', '宠物穿搭', '健康养护', '洗护测评', '领养故事', '周末探店']
@@ -24,14 +23,6 @@ export default function CommunityPage() {
 
   return (
     <div className="bg-background min-h-svh">
-      <header className="sticky top-0 z-[120]">
-        <div className="mx-auto max-w-6xl px-4 sm:px-7">
-          <div className="flex h-24 items-center">
-            <PageSearch />
-          </div>
-        </div>
-      </header>
-
       <main className="mx-auto w-full max-w-6xl px-4 pb-28 pt-4 sm:px-7 sm:pt-6">
         <nav aria-label="内容分类" className="mb-5 flex items-center justify-start gap-2 overflow-x-auto py-1 sm:justify-center [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {communityFilters.map((filter, index) => (

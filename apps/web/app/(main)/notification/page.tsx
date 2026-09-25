@@ -5,7 +5,6 @@ import { AtIcon, Bookmark01Icon, Comment01Icon, FavouriteIcon, UserAdd01Icon } f
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, Button } from '@propet/ui'
 import { useState } from 'react'
-import { PageSearch } from '@/components/page-search'
 
 type NotificationTab = '评论与@' | '赞与收藏' | '新增关注'
 
@@ -191,11 +190,7 @@ export default function NotificationPage() {
   return (
     <div className="bg-background min-h-svh">
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-        <header className="sticky top-0 z-[120] flex h-24 items-center">
-          <PageSearch />
-        </header>
-
-        <main className="mx-auto max-w-3xl pb-28 pt-10 sm:pt-14">
+        <main className="mx-auto max-w-3xl pb-28 pt-6">
           <div className="flex items-center justify-center gap-1 overflow-x-auto pb-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {tabs.map(tab => (
               <button

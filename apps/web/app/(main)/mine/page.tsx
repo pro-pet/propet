@@ -9,7 +9,6 @@ import { useTheme } from 'next-themes'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { useAuth } from '@/components/auth-provider'
-import { PageSearch } from '@/components/page-search'
 import { WaterfallFeed } from '@/components/waterfall-feed'
 
 const UID = 'PP-83927461'
@@ -73,10 +72,6 @@ export default function MinePage() {
   return (
     <div className="bg-background min-h-svh">
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-        <header className="sticky top-0 z-[120] flex h-24 items-center">
-          <PageSearch />
-        </header>
-
         <section
           className="relative mx-auto max-w-3xl py-10 sm:py-14"
         >
