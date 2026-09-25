@@ -1,23 +1,51 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalDependencies": [".env", ".env.development", ".env.production"],
-  "globalEnv": ["NODE_ENV"],
+  "globalDependencies": [
+    ".env*"
+  ],
+  "globalEnv": [
+    "NODE_ENV",
+    "API_URL",
+    "NEXT_PUBLIC_*"
+  ],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**"
+      ]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": [
+        "^lint"
+      ]
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": [
+        "^check-types"
+      ]
     },
     "dev": {
       "cache": false,
       "persistent": true
     }
-  }
+  },
+  "globalPassThroughEnv": [
+    "DATABASE_URL",
+    "TEST_DATABASE_URL",
+    "SHADOW_DATABASE_URL",
+    "JWT_SECRET",
+    "JWT_EXPIRES_IN",
+    "PORT",
+    "CORS_ORIGIN"
+  ]
 }

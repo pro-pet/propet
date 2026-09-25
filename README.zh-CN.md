@@ -56,6 +56,8 @@ ProPet 是一个创新的宠物社交平台，与传统社交媒体不同，我�
 | **Express** | - | HTTP 服务平台 |
 | **TypeScript** | 5.7 | 类型安全 |
 | **Jest** | 30.0 | 单元测试框架 |
+| **MySQL** | 8.4 | Docker 持久化关系型数据库 |
+| **Prisma** | 7.4 | ORM、版本化迁移与客户端生成 |
 | **RxJS** | 7.8 | 响应式编程库 |
 
 ### 工程化 (Engineering)
@@ -71,35 +73,64 @@ ProPet 是一个创新的宠物社交平台，与传统社交媒体不同，我�
 
 ## 🚀 快速开始
 
-### 环境要求
+环境要求：Node.js 22.12+（推荐 Node.js 22 LTS）、pnpm 10.4.1，以及已启动的 Docker Desktop / Docker Engine + Compose v2。
 
-- Node.js >= 20
-- pnpm >= 10.4
-
-### 安装依赖
+### 本地开发：Docker MySQL + 本机前后端
 
 ```bash
 pnpm install
-```
-
-### 启动开发服务器
-
-```bash
-# 启动所有服务
+# 首次配置时复制；已有 .env 时直接编辑
+cp .env.example .env
+pnpm db:up
+pnpm db:generate
+pnpm db:deploy
+pnpm db:seed     # 可选：创建 test@propet.com / password123 测试用户
 pnpm dev
-
-# 仅启动前端
-pnpm --filter web dev
-
-# 仅启动后端
-pnpm --filter service start:dev
 ```
 
-### 构建项目
+访问前端 <http://localhost:3000>、后端 <http://localhost:3001/api>，开发模式 API 文档位于 <http://localhost:3001/docs>。数据库健康检查为 `/api/health`。
+
+MySQL 8.4 使用命名卷持久化数据，默认地址为 `127.0.0.1:3306`，数据库和用户名均为 `propet`，开发密码为 `propet_dev_password`。首次初始化还会创建供 Prisma 迁移使用的 `propet_shadow` 和集成测试使用的 `propet_test`。
+
+配置优先级为：进程环境变量 → `.env.<环境>.local` → `.env.local` → `.env` → `.env.<环境>`。前后端与 Prisma CLI 使用相同顺序。Compose 从根目录 `.env` 读取配置。更改 MySQL 密码或端口时，同步更新 `DATABASE_URL`、`SHADOW_DATABASE_URL`；容器内仍使用 `mysql:3306`。已有数据卷的数据库密码不会随环境变量自动改变。
+
+### 全部通过 Docker 启动
 
 ```bash
+pnpm docker:up
+# 可选：创建测试用户
+# docker compose --profile app run --rm migrate pnpm db:seed
+pnpm docker:logs
+pnpm docker:down
+```
+
+也可以直接执行 `docker compose --profile app up -d --build --wait`，无需本机 Node.js/pnpm。Compose 等待 MySQL 就绪、执行版本化迁移，再依次启动 API 和前端。前端服务端通过内部地址 `http://service:3001` 访问 API。
+
+默认端口仍为 3000/3001，镜像构建时需要联网安装依赖并下载 Next.js 字体。`docker:down` 保留数据库卷；`docker compose --profile app down -v` 会删除所有本项目数据库数据。默认密码和 JWT 密钥仅供本地开发；部署时请使用实际密钥并配置 HTTPS。
+
+### 数据库迁移与测试
+
+```bash
+# 修改 schema.prisma 后生成开发迁移（使用专用 shadow 数据库）
+pnpm db:migrate --name describe_change
+pnpm db:generate
+
+# 应用已提交的迁移
+pnpm db:deploy
+
+# 单元测试
+pnpm --filter @propet/service test --runInBand
+
+# 独立测试库，使用默认 Docker 开发密码
+DATABASE_URL='mysql://propet:propet_dev_password@127.0.0.1:3306/propet_test' pnpm db:deploy
+TEST_DATABASE_URL='mysql://propet:propet_dev_password@127.0.0.1:3306/propet_test' pnpm --filter @propet/service test:e2e --runInBand
+
 pnpm build
 ```
+
+真实 MySQL 集成测试覆盖注册登录、帖子增删改查、JSON 图片数组、中文和 emoji、UTC 日期与权限检查。测试必须显式提供 `TEST_DATABASE_URL`，只清理由测试创建的用户和数据。
+
+当前后端的用户、宠物和帖子模型使用 Prisma 7 + MySQL；前端尚未接入 API 的展示模块仍可能使用示例数据。MySQL 迁移位于 `apps/service/prisma/migrations`。新基线仅创建 MySQL 表结构，**不会自动导入现有数据库数据**；已有业务数据需单独导出、转换并导入。
 
 ---
 
@@ -107,7 +138,14 @@ pnpm build
 
 | 命令 | 说明 |
 |------|------|
-| `pnpm dev` | 启动开发服务器 |
+| `pnpm dev` | 本机启动前后端，需先启动 MySQL 并执行迁移 |
+| `pnpm db:up` / `pnpm db:stop` | 启动 / 停止 Docker MySQL，保留数据 |
+| `pnpm db:logs` | 查看 MySQL 日志 |
+| `pnpm db:generate` | 生成 Prisma Client |
+| `pnpm db:deploy` / `pnpm db:migrate` | 应用迁移 / 创建开发迁移 |
+| `pnpm db:seed` / `pnpm db:studio` | 初始化测试账号 / 打开数据库管理界面 |
+| `pnpm docker:up` / `pnpm docker:down` | 启动 / 停止完整容器环境 |
+| `pnpm docker:logs` | 查看容器日志 |
 | `pnpm build` | 构建所有包 |
 | `pnpm lint` | 运行代码检查 |
 | `pnpm format` | 格式化代码 |

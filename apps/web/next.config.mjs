@@ -4,11 +4,15 @@ import { config } from 'dotenv'
 
 const env = process.env.NODE_ENV || 'development'
 
-config({ path: resolve(process.cwd(), '../..', `.env.${env}`) })
-config({ path: resolve(process.cwd(), '../..', '.env') })
+const workspaceRoot = resolve(import.meta.dirname, '../..')
+for (const file of [`.env.${env}.local`, '.env.local', '.env', `.env.${env}`]) {
+  config({ path: resolve(workspaceRoot, file), quiet: true })
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
+  outputFileTracingRoot: workspaceRoot,
   experimental: {
     externalDir: true,
   },

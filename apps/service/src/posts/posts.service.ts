@@ -13,12 +13,22 @@ const postSelection = {
 } as const
 
 type PostWithAuthor = Prisma.PostGetPayload<{ include: typeof postSelection }>
+type PostResponse = Omit<PostWithAuthor, 'images'> & { images: string[] }
+
+function serializePost(post: PostWithAuthor): PostResponse {
+  return {
+    ...post,
+    images: Array.isArray(post.images)
+      ? post.images.filter((image): image is string => typeof image === 'string')
+      : [],
+  }
+}
 
 @Injectable()
 export class PostsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async list(query: PaginationDto): Promise<Paginated<PostWithAuthor>> {
+  async list(query: PaginationDto): Promise<Paginated<PostResponse>> {
     const { pageIndex, pageSize } = query
     const skip = pageIndex * pageSize
     const [items, total] = await Promise.all([
@@ -32,7 +42,7 @@ export class PostsService {
     ])
 
     return {
-      items,
+      items: items.map(serializePost),
       meta: {
         total,
         pageIndex,
@@ -42,18 +52,18 @@ export class PostsService {
     }
   }
 
-  async findOne(id: string): Promise<PostWithAuthor> {
+  async findOne(id: string): Promise<PostResponse> {
     const post = await this.prisma.post.findUnique({
       where: { id },
       include: postSelection,
     })
     if (!post)
       throw new NotFoundException('Post not found')
-    return post
+    return serializePost(post)
   }
 
-  create(authorId: string, dto: CreatePostDto): Promise<PostWithAuthor> {
-    return this.prisma.post.create({
+  async create(authorId: string, dto: CreatePostDto): Promise<PostResponse> {
+    const post = await this.prisma.post.create({
       data: {
         title: dto.title,
         content: dto.content,
@@ -62,6 +72,7 @@ export class PostsService {
       },
       include: postSelection,
     })
+    return serializePost(post)
   }
 
   async update(id: string, authorId: string, dto: UpdatePostDto) {

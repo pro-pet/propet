@@ -1,7 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
+import { createMysqlAdapter } from '../src/prisma/mysql-adapter'
 
-const prisma = new PrismaClient()
+const databaseUrl = process.env.DATABASE_URL
+if (!databaseUrl)
+  throw new Error('DATABASE_URL is required. Run the seed with pnpm db:seed.')
+
+const prisma = new PrismaClient({ adapter: createMysqlAdapter(databaseUrl) })
 
 async function main() {
   const hashedPassword = await bcrypt.hash('password123', 10)
@@ -23,6 +28,6 @@ async function main() {
 main()
   .catch((e) => {
     console.error(e)
-    process.exit(1)
+    process.exitCode = 1
   })
   .finally(() => prisma.$disconnect())

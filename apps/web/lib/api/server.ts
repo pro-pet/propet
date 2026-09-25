@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-const backendOrigin = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001').replace(/\/+$/, '')
+const backendOrigin = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001').replace(/\/+$/, '')
 export const BACKEND_API_URL = `${backendOrigin}/api`
 export const SESSION_COOKIE_NAME = 'propet-session'
 export const sessionCookieOptions = {
@@ -17,7 +17,9 @@ export function apiJson(body: unknown, status = 200) {
 
 export function hasSameOrigin(request: NextRequest) {
   const origin = request.headers.get('origin')
-  return !origin || origin === request.nextUrl.origin
+  // Standalone servers bind to 0.0.0.0; Host contains the browser-facing authority.
+  const host = request.headers.get('host') || request.nextUrl.host
+  return !origin || origin === `${request.nextUrl.protocol}//${host}`
 }
 
 export function fetchBackendApi(path: string, init: RequestInit) {

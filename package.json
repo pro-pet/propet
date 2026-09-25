@@ -6,7 +6,18 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "turbo lint -- --fix"
+    "format": "turbo lint -- --fix",
+    "db:up": "docker compose up -d --wait mysql",
+    "db:stop": "docker compose stop mysql",
+    "db:logs": "docker compose logs -f mysql",
+    "db:generate": "pnpm --filter @propet/service db:generate",
+    "db:deploy": "pnpm --filter @propet/service db:migrate:prod",
+    "db:migrate": "pnpm --filter @propet/service db:migrate",
+    "db:seed": "pnpm --filter @propet/service db:seed",
+    "db:studio": "pnpm --filter @propet/service db:studio",
+    "docker:up": "docker compose --profile app up -d --build --wait",
+    "docker:down": "docker compose --profile app down",
+    "docker:logs": "docker compose --profile app logs -f"
   },
   "devDependencies": {
     "@propet/eslint-config": "workspace:*",
@@ -16,6 +27,6 @@
   },
   "packageManager": "pnpm@10.4.1",
   "engines": {
-    "node": ">=20"
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   }
 }

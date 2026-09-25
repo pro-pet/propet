@@ -10,3 +10,9 @@ export function findWorkspaceRoot(from: string): string {
   }
   return from
 }
+
+export function getEnvFilePaths(root: string): string[] {
+  const env = process.env.NODE_ENV || 'development'
+  return [`.env.${env}.local`, '.env.local', '.env', `.env.${env}`]
+    .map(file => join(root, file))
+}
