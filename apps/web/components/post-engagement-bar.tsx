@@ -89,17 +89,15 @@ export function PostEngagementBar({
 
           <div className="mt-2 flex items-center gap-2">
             <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
-              <PopoverTrigger asChild>
-                <Button size="icon" variant="ghost">
-                  <HugeiconsIcon icon={SmileIcon} />
-                </Button>
+              <PopoverTrigger render={<Button size="icon" variant="ghost" />}>
+                <HugeiconsIcon icon={SmileIcon} />
               </PopoverTrigger>
               <PopoverContent
                 side="top"
                 align="start"
                 sideOffset={8}
                 className="z-340 w-auto gap-0 overflow-hidden rounded-2xl border p-0 shadow-xl"
-                onOpenAutoFocus={event => event.preventDefault()}
+                initialFocus={false}
               >
                 <EmojiPicker onEmojiSelect={handleEmojiSelect} />
               </PopoverContent>
