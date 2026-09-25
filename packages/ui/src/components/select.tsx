@@ -1,9 +1,9 @@
 'use client'
 
-import { ArrowDown01Icon, ArrowUp01Icon, Tick02Icon, UnfoldMoreIcon } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
-
 import { Select as SelectPrimitive } from '@base-ui/react/select'
+import { ArrowDown01Icon, ArrowUp01Icon, Tick02Icon, UnfoldMoreIcon } from '@hugeicons/core-free-icons'
+
+import { HugeiconsIcon } from '@hugeicons/react'
 import { cn } from '@propet/ui/lib/utils'
 
 const Select = SelectPrimitive.Root
@@ -54,13 +54,13 @@ function SelectTrigger({
     >
       {children}
       <SelectPrimitive.Icon
-        render={
+        render={(
           <HugeiconsIcon
             icon={UnfoldMoreIcon}
             strokeWidth={2}
             className="text-muted-foreground pointer-events-none size-4"
           />
-        }
+        )}
       />
     </SelectPrimitive.Trigger>
   )
