@@ -86,10 +86,8 @@ export default function MinePage() {
               <div className="flex max-w-full min-w-0 items-center gap-2">
                 <h1 className="max-w-[calc(100vw-8rem)] min-w-0 truncate text-2xl font-bold tracking-tight sm:max-w-sm sm:text-3xl">{profileName}</h1>
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon-lg" className="shrink-0 rounded-full" aria-label="更多设置" title="更多设置">
+                  <DropdownMenuTrigger render={<Button variant="ghost" size="icon-lg" className="shrink-0 rounded-full" aria-label="更多设置" title="更多设置" />}>
                       <HugeiconsIcon icon={MoreHorizontalIcon} />
-                    </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" sideOffset={8} className="w-56">
                     <DropdownMenuGroup>
@@ -104,11 +102,11 @@ export default function MinePage() {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                      <DropdownMenuItem onSelect={() => setInfoDialog('privacy')}>
+                      <DropdownMenuItem onClick={() => setInfoDialog('privacy')}>
                         <HugeiconsIcon icon={Agreement01Icon} />
                         隐私协议
                       </DropdownMenuItem>
-                      <DropdownMenuItem onSelect={() => setInfoDialog('support')}>
+                      <DropdownMenuItem onClick={() => setInfoDialog('support')}>
                         <HugeiconsIcon icon={CustomerService01Icon} />
                         帮助与客服
                       </DropdownMenuItem>
@@ -136,7 +134,7 @@ export default function MinePage() {
                       </DropdownMenuSub>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="destructive" disabled={isSigningOut} onSelect={() => void handleSignOut()}>
+                    <DropdownMenuItem variant="destructive" disabled={isSigningOut} onClick={() => void handleSignOut()}>
                       <HugeiconsIcon icon={Logout01Icon} />
                       {isSigningOut ? '正在退出…' : '退出登录'}
                     </DropdownMenuItem>
