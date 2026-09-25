@@ -4,11 +4,11 @@ import type { AutoHeightProps } from '@propet/ui/components/animate-ui/primitive
 import type { HighlightItemProps, HighlightProps } from '@propet/ui/components/animate-ui/primitives/effects/highlight'
 import type { HTMLMotionProps, Transition } from 'motion/react'
 
+import { Tabs as TabsPrimitive } from '@base-ui/react/tabs'
 import { AutoHeight } from '@propet/ui/components/animate-ui/primitives/effects/auto-height'
 import { Highlight, HighlightItem } from '@propet/ui/components/animate-ui/primitives/effects/highlight'
 import { useControlledState } from '@propet/ui/hooks/use-controlled-state'
 import { createStrictContext } from '@ui/lib/create-strict-context'
-import { Tabs as TabsPrimitive } from '@base-ui/react/tabs'
 import { AnimatePresence, motion } from 'motion/react'
 import * as React from 'react'
 
@@ -92,16 +92,18 @@ function TabsContent({
       <TabsPrimitive.Panel
         keepMounted={keepMounted}
         value={value}
-        render={<motion.div
-          data-slot="tabs-content"
-          layout
-          layoutDependency={value}
-          initial={{ opacity: 0, filter: 'blur(4px)' }}
-          animate={{ opacity: 1, filter: 'blur(0px)' }}
-          exit={{ opacity: 0, filter: 'blur(4px)' }}
-          transition={transition}
-          {...props}
-        />}
+        render={(
+          <motion.div
+            data-slot="tabs-content"
+            layout
+            layoutDependency={value}
+            initial={{ opacity: 0, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, filter: 'blur(4px)' }}
+            transition={transition}
+            {...props}
+          />
+        )}
       />
     </AnimatePresence>
   )
