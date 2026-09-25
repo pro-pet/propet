@@ -8,8 +8,8 @@ import { AutoHeight } from '@propet/ui/components/animate-ui/primitives/effects/
 import { Highlight, HighlightItem } from '@propet/ui/components/animate-ui/primitives/effects/highlight'
 import { useControlledState } from '@propet/ui/hooks/use-controlled-state'
 import { createStrictContext } from '@ui/lib/create-strict-context'
+import { Tabs as TabsPrimitive } from '@base-ui/react/tabs'
 import { AnimatePresence, motion } from 'motion/react'
-import { Tabs as TabsPrimitive } from 'radix-ui'
 import * as React from 'react'
 
 interface TabsContextType {
@@ -19,7 +19,7 @@ interface TabsContextType {
 
 const [TabsProvider, useTabs] = createStrictContext<TabsContextType>('TabsContext')
 
-type TabsProps = React.ComponentProps<typeof TabsPrimitive.Root>
+type TabsProps = TabsPrimitive.Root.Props
 
 function Tabs(props: TabsProps) {
   const [value, setValue] = useControlledState({
@@ -59,7 +59,7 @@ function TabsHighlight({
   )
 }
 
-type TabsListProps = React.ComponentProps<typeof TabsPrimitive.List>
+type TabsListProps = TabsPrimitive.List.Props
 
 function TabsList(props: TabsListProps) {
   return <TabsPrimitive.List data-slot="tabs-list" {...props} />
@@ -73,24 +73,26 @@ function TabsHighlightItem(props: TabsHighlightItemProps) {
   return <HighlightItem data-slot="tabs-highlight-item" {...props} />
 }
 
-type TabsTriggerProps = React.ComponentProps<typeof TabsPrimitive.Trigger>
+type TabsTriggerProps = TabsPrimitive.Tab.Props
 
 function TabsTrigger(props: TabsTriggerProps) {
-  return <TabsPrimitive.Trigger data-slot="tabs-trigger" {...props} />
+  return <TabsPrimitive.Tab data-slot="tabs-trigger" {...props} />
 }
 
-type TabsContentProps = React.ComponentProps<typeof TabsPrimitive.Content> & HTMLMotionProps<'div'>
+type TabsContentProps = TabsPrimitive.Panel.Props & HTMLMotionProps<'div'>
 
 function TabsContent({
   value,
-  forceMount,
+  keepMounted,
   transition = { duration: 0.5, ease: 'easeInOut' },
   ...props
 }: TabsContentProps) {
   return (
     <AnimatePresence mode="wait">
-      <TabsPrimitive.Content asChild forceMount={forceMount} value={value}>
-        <motion.div
+      <TabsPrimitive.Panel
+        keepMounted={keepMounted}
+        value={value}
+        render={<motion.div
           data-slot="tabs-content"
           layout
           layoutDependency={value}
@@ -99,8 +101,8 @@ function TabsContent({
           exit={{ opacity: 0, filter: 'blur(4px)' }}
           transition={transition}
           {...props}
-        />
-      </TabsPrimitive.Content>
+        />}
+      />
     </AnimatePresence>
   )
 }

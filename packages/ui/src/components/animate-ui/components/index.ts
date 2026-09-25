@@ -1,1 +1,1 @@
-export * from './radix'
+export * from './base'
