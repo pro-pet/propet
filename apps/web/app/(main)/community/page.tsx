@@ -27,7 +27,7 @@ export default function CommunityPage() {
         <nav aria-label="内容分类" className="mb-5 flex items-center justify-start gap-2 overflow-x-auto py-1 sm:justify-center [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {communityFilters.map((filter, index) => (
             <span key={filter} className="flex shrink-0 items-center gap-2">
-              {index === 2 && <span aria-hidden className="bg-border h-5 w-px" />}
+              {index === 2 && <span aria-hidden className="bg-border h-5 w-0.5 rounded-full" />}
               <button
                 type="button"
                 aria-pressed={activeFilter === filter}
