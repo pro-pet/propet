@@ -210,8 +210,8 @@ export default function PetsPage() {
 
   return (
     <div className="bg-background min-h-svh">
-      <div className="sticky top-0 z-120 h-24 overflow-visible">
-        <header className="relative z-120">
+      <div className="sticky top-0 z-40 h-24 overflow-visible">
+        <header className="relative z-40">
           <div className="mx-auto flex h-24 w-full max-w-4xl items-center justify-between gap-4 px-5 sm:px-8">
             <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">我的宠物</h1>
             <Button type="button" size="lg" className="h-10 shrink-0 rounded-full px-4" onClick={openCreateDialog}>
@@ -220,7 +220,7 @@ export default function PetsPage() {
             </Button>
           </div>
         </header>
-        <div className="pointer-events-none fixed inset-x-0 top-0 z-110 h-28">
+        <div className="pointer-events-none fixed inset-x-0 top-0 z-30 h-28">
           <GradualBlur
             target="page"
             position="top"
