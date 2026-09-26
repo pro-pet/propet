@@ -59,6 +59,7 @@ function SelectTrigger({
 function SelectContent({
   className,
   children,
+  container,
   side = 'bottom',
   sideOffset = 4,
   align = 'center',
@@ -66,12 +67,13 @@ function SelectContent({
   alignItemWithTrigger = true,
   ...props
 }: SelectPrimitive.Popup.Props
+  & Pick<SelectPrimitive.Portal.Props, 'container'>
   & Pick<
     SelectPrimitive.Positioner.Props,
     'align' | 'alignOffset' | 'side' | 'sideOffset' | 'alignItemWithTrigger'
   >) {
   return (
-    <SelectPrimitive.Portal>
+    <SelectPrimitive.Portal container={container}>
       <SelectPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}

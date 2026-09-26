@@ -32,7 +32,7 @@ export function MainDock() {
   return (
     <motion.div
       layoutRoot
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-200 flex justify-center pb-6"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center pb-6"
     >
       <div className="pointer-events-auto">
         <Dock items={items} />

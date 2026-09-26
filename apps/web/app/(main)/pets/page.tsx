@@ -1,10 +1,10 @@
 'use client'
 
 import type { FollowPet } from '@/lib/api/follows'
-import { Add01Icon } from '@hugeicons/core-free-icons'
+import { Add01Icon, Calendar03Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Avatar, Button, Card, CardContent, Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@propet/ui'
-import { useState } from 'react'
+import { Avatar, Button, Calendar, Card, CardContent, Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@propet/ui'
+import { useRef, useState } from 'react'
 import GradualBlur from '@/components/gradual-blur'
 import { useFollowing, useToggleFollow } from '@/lib/api/follows'
 import { useCreatePet, useDeletePet, useMyPets, useUpdatePet } from '@/lib/api/pets'
@@ -18,7 +18,27 @@ interface PetForm {
   avatar: string
 }
 const emptyForm: PetForm = { nickname: '', species: '猫咪', breed: '', gender: 'UNKNOWN', birthday: '', avatar: '' }
+const genderItems = [
+  { value: 'UNKNOWN', label: '未知' },
+  { value: 'MALE', label: '公' },
+  { value: 'FEMALE', label: '母' },
+] as const
 type PetTab = 'mine' | 'following'
+
+function parseBirthday(value: string) {
+  if (!value)
+    return undefined
+
+  const [year, month, day] = value.split('-').map(Number)
+  const date = new Date(year!, month! - 1, day!)
+  return date.getFullYear() === year && date.getMonth() === month! - 1 && date.getDate() === day
+    ? date
+    : undefined
+}
+
+function toBirthdayValue(date: Date) {
+  return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-')
+}
 
 export default function PetsPage() {
   const petsQuery = useMyPets()
@@ -31,10 +51,13 @@ export default function PetsPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingPetId, setEditingPetId] = useState<string | null>(null)
   const [form, setForm] = useState<PetForm>(emptyForm)
+  const [birthdayPickerOpen, setBirthdayPickerOpen] = useState(false)
+  const drawerContentRef = useRef<HTMLDivElement>(null)
 
   const openCreateDialog = () => {
     setEditingPetId(null)
     setForm(emptyForm)
+    setBirthdayPickerOpen(false)
     setDialogOpen(true)
   }
 
@@ -48,7 +71,14 @@ export default function PetsPage() {
       birthday: pet.birthday ? pet.birthday.slice(0, 10) : '',
       avatar: pet.avatar ?? '',
     })
+    setBirthdayPickerOpen(false)
     setDialogOpen(true)
+  }
+
+  const handleDrawerOpenChange = (open: boolean) => {
+    setDialogOpen(open)
+    if (!open)
+      setBirthdayPickerOpen(false)
   }
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -66,12 +96,14 @@ export default function PetsPage() {
     else
       await createPet.mutateAsync(input)
     setDialogOpen(false)
+    setBirthdayPickerOpen(false)
     setEditingPetId(null)
     setForm(emptyForm)
   }
 
   const pending = createPet.isPending || updatePet.isPending
   const followingPets = (followingPetsQuery.data ?? []) as FollowPet[]
+  const birthdayDate = parseBirthday(form.birthday)
 
   return (
     <div className="bg-background min-h-svh">
@@ -200,11 +232,10 @@ export default function PetsPage() {
         )}
       </main>
 
-      <Drawer open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DrawerContent className="h-4/5">
+      <Drawer open={dialogOpen} onOpenChange={handleDrawerOpenChange}>
+        <DrawerContent ref={drawerContentRef} className="h-4/5" aria-describedby={undefined}>
           <DrawerHeader className="mx-auto w-full max-w-2xl px-5 pb-3 sm:px-8">
-            <DrawerTitle>{editingPetId ? '编辑宠物' : '添加宠物'}</DrawerTitle>
-            <DrawerDescription>填写宠物的基础资料，之后可以在发帖时提及它。</DrawerDescription>
+            <DrawerTitle className="text-left">{editingPetId ? '编辑宠物' : '添加宠物'}</DrawerTitle>
           </DrawerHeader>
           <form id="pet-form" className="mx-auto grid w-full max-w-2xl gap-4 overflow-y-auto px-5 pb-2 sm:grid-cols-2 sm:px-8" onSubmit={submit}>
             <div className="grid gap-2">
@@ -221,20 +252,41 @@ export default function PetsPage() {
             </div>
             <div className="grid gap-2">
               <label htmlFor="pet-gender" className="text-sm font-medium">性别</label>
-              <Select value={form.gender} onValueChange={value => setForm(current => ({ ...current, gender: value as PetForm['gender'] }))}>
+              <Select modal={false} items={genderItems} value={form.gender} onValueChange={value => setForm(current => ({ ...current, gender: value as PetForm['gender'] }))}>
                 <SelectTrigger id="pet-gender" className="w-full">
                   <SelectValue placeholder="选择性别" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="UNKNOWN">未知</SelectItem>
-                  <SelectItem value="MALE">公</SelectItem>
-                  <SelectItem value="FEMALE">母</SelectItem>
+                <SelectContent container={drawerContentRef} alignItemWithTrigger={false}>
+                  <SelectGroup>
+                    {genderItems.map(item => (
+                      <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>
+                    ))}
+                  </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-2">
               <label htmlFor="pet-birthday" className="text-sm font-medium">生日</label>
-              <Input id="pet-birthday" type="date" value={form.birthday} onChange={event => setForm(current => ({ ...current, birthday: event.target.value }))} />
+              <Popover open={birthdayPickerOpen} onOpenChange={setBirthdayPickerOpen}>
+                <PopoverTrigger render={<Button id="pet-birthday" type="button" variant="outline" className="w-full justify-between font-normal" />}>
+                  <span className={birthdayDate ? '' : 'text-muted-foreground'}>
+                    {birthdayDate ? birthdayDate.toLocaleDateString('zh-CN') : '选择生日'}
+                  </span>
+                  <HugeiconsIcon icon={Calendar03Icon} data-icon="inline-end" />
+                </PopoverTrigger>
+                <PopoverContent container={drawerContentRef} align="start" className="w-auto gap-0 overflow-hidden p-0">
+                  <Calendar
+                    mode="single"
+                    selected={birthdayDate}
+                    onSelect={(date) => {
+                      if (!date)
+                        return
+                      setForm(current => ({ ...current, birthday: toBirthdayValue(date) }))
+                      setBirthdayPickerOpen(false)
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="grid gap-2">
               <label htmlFor="pet-avatar" className="text-sm font-medium">头像地址</label>

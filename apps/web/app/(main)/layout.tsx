@@ -20,7 +20,8 @@ export default function MainLayout({
         curve="bezier"
         exponential
         opacity={1}
-        zIndex={10}
+        // Page-target blur adds 100 to this value; keep the resulting layer below the dock.
+        zIndex={-70}
       />
       <MainDock />
     </div>
