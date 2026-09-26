@@ -199,8 +199,6 @@ export default function MinePage() {
           </DialogContent>
         </Dialog>
 
-        <div className="mx-auto flex max-w-3xl justify-end pt-4"><Button type="button" variant="ghost" size="sm" onClick={() => router.push('/following')}>查看我的关注</Button></div>
-
         <div>
           <div className="flex items-center justify-center gap-1 pb-3">
             {['笔记', '收藏', '喜欢'].map(tab => (
